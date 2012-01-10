@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<room>
+	<layer>
+		<val>1</val>
+		<val>11</val>
+		<area>
+			<id>MOSSY_COBBLESTONE</id>
+		</area>
+	</layer>
+
+	<layer>
+		<from>2</from>
+		<to>10</to>
+		<area>AIR</area>
+		<row>
+			<val>1</val>
+			<val>16</val>
+			<dir>1</dir>
+			<id>MOSSY_COBBLESTONE</id>
+		</row>
+		<row>
+			<val>1</val>
+			<val>16</val>
+			<dir>2</dir>
+			<id>MOSSY_COBBLESTONE</id>
+		</row>		
+	</layer>
+	
+	<layer>
+		<val>2</val>
+		<point>
+			<x>8</x>
+			<y>8</y>
+			<id>MOB_SPAWNER</id>
+			<data>0</data>
+		</point>
+		<point>
+			<x>9</x>
+			<y>9</y>
+			<id>MOB_SPAWNER</id>
+			<data>2</data>
+		</point>
+		<point>
+			<x>2</x>
+			<y>4</y>
+			<id>CHEST</id>
+		</point>
+		<point>
+			<x>2</x>
+			<y>12</y>
+			<id>CHEST</id>
+		</point>
+		<point>
+			<x>15</x>
+			<y>4</y>
+			<id>CHEST</id>
+		</point>
+		<point>
+			<x>15</x>
+			<y>12</y>
+			<id>CHEST</id>
+		</point>
+	</layer>
+</room>

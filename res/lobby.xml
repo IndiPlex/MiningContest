@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<room>
+	<start>100</start>
+	<layer>
+		<val>1</val>
+		<val>11</val>
+		<area>
+			<id>BEDROCK</id>
+		</area>
+	</layer>
+	
+	<layer>
+		<val>10</val>
+		<area>
+			<id>GLOWSTONE</id>
+		</area>
+	</layer>
+	
+	<layer>
+		<from>2</from>
+		<to>10</to>
+		<row>
+			<val>1</val>
+			<val>16</val>
+			<dir>1</dir>
+			<id>BEDROCK</id>
+		</row>
+		<row>
+			<val>1</val>
+			<val>16</val>
+			<dir>2</dir>
+			<id>BEDROCK</id>
+		</row>
+	</layer>
+</room>

@@ -1,0 +1,9 @@
+name: Mining Contest
+author: Indiplex Team
+
+main: de.indiplex.miningcontest.MiningContest
+version: 0.1
+
+commands:
+  mico:
+    description: Mining Contest
