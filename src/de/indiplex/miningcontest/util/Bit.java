@@ -39,6 +39,5 @@ public class Bit {
         int mask = 1 << pos;
 
         return (n & mask) == mask;
-        // alternativ: return (n & 1<<pos) != 0;
     }
 }

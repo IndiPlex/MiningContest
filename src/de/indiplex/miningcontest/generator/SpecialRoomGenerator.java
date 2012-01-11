@@ -42,10 +42,6 @@ public class SpecialRoomGenerator extends BlockPopulator {
     public SpecialRoomGenerator(MiCo mico) {
         this.mico = mico;
         map = mico.getMap();
-        for (MapChunk mc : map.getMapChunks()) {
-            //if (!mc.getType().equals(Type.REST))
-            //System.out.println(mc.getType());
-        }
     }
 
     @Override
@@ -107,9 +103,6 @@ public class SpecialRoomGenerator extends BlockPopulator {
                                 cs.setCreatureType(ct);
                             } else {
                                 b.setData(sdata);
-                            }
-                            if (b.getType().equals(Material.IRON_DOOR_BLOCK)) {
-                                //System.out.println(sdata);
                             }
                         }
                     }

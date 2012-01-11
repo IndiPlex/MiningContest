@@ -70,7 +70,7 @@ public class GameThread implements Runnable {
             }
             if (currTime-lastCheck>=3000) {
                 
-                // Player message for droppoints (?)
+                /// Message players who dropped items in the last 10 secs with their points 
                 for (Player p:mico.getPlayers()) {
                     if (dropMessage.get(p)!=null && dropMessage.get(p)) {
                         if (currTime-drops.get(p)>3000) {
@@ -94,8 +94,7 @@ public class GameThread implements Runnable {
                         }
                     }
                 }
-                // Update sign
-                // TODO: Sign updaten
+                // TODO: Write the code to update signs
             }
             if (currTime-lastCheck>=duration) {
                 

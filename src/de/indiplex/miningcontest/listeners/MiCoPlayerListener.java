@@ -56,7 +56,6 @@ public class MiCoPlayerListener extends PlayerListener {
                 MapChunk l = mico.getLobby();
                 Location loc = new Location(event.getItemDrop().getWorld(), l.getPos().x*16+3, l.getRoom().getStart()+2, l.getPos().y*16+3);
                 event.getItemDrop().teleport(loc);
-                //event.getItemDrop().setTicksLived(10000);
                 Team t = mico.getTeam(player);
                 t.increasePoints(player, points * amount);
                 mico.gameThread.setDrop(player);

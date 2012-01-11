@@ -42,6 +42,7 @@ public class MiCo {
     private Map map;
     private IPMAPI api;
     private MapChunk lobby;
+    private ArrayList<MapChunk> checkedChunks = new ArrayList<MapChunk>();
     public long elapsedTime;
     public long startingTime;
     public GameThread gameThread;
@@ -62,8 +63,12 @@ public class MiCo {
                 Team team = new Team(t, this);
                 team.setBase(mc);
                 teams.add(team);
+                checkedChunks.add(mc);
             } else if (mc.getType().equals(MapChunk.Type.LOBBY)) {
                 lobby = mc;
+                checkedChunks.add(mc);
+            } else if (mc.getType().equals(MapChunk.Type.OUTPOST)) {
+                checkedChunks.add(mc);
             }
         }
     }
@@ -151,7 +156,14 @@ public class MiCo {
     }
 
     public boolean canDestroy(int x, int y, int z, World world) {
-        return !(world.getName().equalsIgnoreCase("ContestWorld") && (isInBase(x, y, z) || lobby.isInside(x, y, z)));
+        boolean b = false;
+        for (MapChunk mc:checkedChunks) {
+            if (mc.isInside(x, y, z)) {
+                b = true;
+                break;
+            }
+        }
+        return !(world.getName().equalsIgnoreCase("ContestWorld") && b);
     }
     
     public boolean canDestroy(Location loc) {
