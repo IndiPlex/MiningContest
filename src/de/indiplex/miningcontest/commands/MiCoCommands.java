@@ -105,20 +105,29 @@ public class MiCoCommands implements CommandExecutor {
                 player.sendMessage("World reset!");
             }
             if (args[0].equalsIgnoreCase("start")) {
-                plugin.getMWAPI().resetWorld(plugin.contestWorld, 10);
-                int startTime = 10;
-                ArrayList<Integer> intervals = new ArrayList<Integer>(Arrays.asList(0,5,8,9));
-                if (args.length!=1 && args.length!=2) {
-                    try {
-                        startTime = Integer.parseInt(args[1]);
-                        for (int i=2;i<args.length;i++) {
-                            intervals.add(Integer.parseInt(args[i]));
+                if (!mico.initializing && !mico.started) {
+                    plugin.getMWAPI().resetWorld(plugin.contestWorld, 10);
+                    int startTime = 10;
+                    ArrayList<Integer> intervals = new ArrayList<Integer>(Arrays.asList(0,5,8,9));
+                    if (args.length!=1 && args.length!=2) {
+                        try {
+                            startTime = Integer.parseInt(args[1]);
+                            for (int i=2;i<args.length;i++) {
+                                intervals.add(Integer.parseInt(args[i]));
+                            }
+                        } catch (NumberFormatException e) {
+                            startTime = 10;                        
                         }
-                    } catch (NumberFormatException e) {
-                        startTime = 10;                        
                     }
+                    MiningContest.getCurrentContest().init(startTime, intervals.toArray(new Integer[0]));
+                } else if (mico.initializing) {
+                    mico.startThread.startNOW = true;
                 }
-                MiningContest.getCurrentContest().init(startTime, intervals.toArray(new Integer[0]));
+            }
+            if (args[0].equalsIgnoreCase("qs")) {
+                mico.initializing = true;
+                mico.getNextTeam().addMember(player);
+                mico.start();
             }
             if (args[0].equalsIgnoreCase("stop")) {
                 for (Team t : mico.getTeams()) {

@@ -62,6 +62,7 @@ public class GameThread implements Runnable {
     @Override
     public void run() {
         mico.startingTime = (lastCheck = (lastMessage = System.currentTimeMillis()));
+        long baseChecked = lastCheck;       
         while (running) {
             currTime = System.currentTimeMillis();
             mico.elapsedTime = mico.startingTime - currTime;
@@ -69,8 +70,7 @@ public class GameThread implements Runnable {
                 mico.printPoints();
                 lastMessage = System.currentTimeMillis();
             }
-            if (currTime - lastCheck >= 300) {
-
+            if (currTime - lastCheck >= 300) {                
                 /// Message players who dropped items in the last 10 secs with their points 
                 for (Player p : mico.getPlayers()) {
                     if (dropMessage.get(p) != null && dropMessage.get(p)) {
@@ -89,6 +89,7 @@ public class GameThread implements Runnable {
                         Long l = doors.get(loc);
                         if (l != null) {
                             if (currTime - l > 2000) {
+                                System.out.println("lol");
                                 Door.closeDoor(b);
                                 doors.remove(loc);
                             }
@@ -99,7 +100,7 @@ public class GameThread implements Runnable {
 
                 lastCheck = currTime;
             }
-            if (currTime - lastCheck >= 1000) {
+            if (currTime - baseChecked >= 1000) {
                 for (Team t : mico.getTeams()) {
                     for (Player p : t.getMembers()) {
                         for (Outpost o : mico.getOutposts()) {
@@ -109,6 +110,7 @@ public class GameThread implements Runnable {
                         }
                     }
                 }
+                baseChecked = currTime;
             }
             if (mico.elapsedTime >= duration) {
             }
