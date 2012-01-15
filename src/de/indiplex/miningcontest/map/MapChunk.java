@@ -30,10 +30,10 @@ import org.bukkit.Location;
  */
 public class MapChunk {
 
-    private Type type;
-    private Room room;
-    private Point pos;
-    private int[][] data;
+    protected Type type;
+    protected Room room;
+    protected Point pos;
+    protected int[][] data;
 
     public MapChunk(Point pos, int[][] data) {
         this.pos = pos;
@@ -59,12 +59,16 @@ public class MapChunk {
                 break;
             case 0xFFFFFF00:
                 type = Type.OUTPOST;
-                room = RoomParser.parseRoom(type);
+                room = RoomParser.parseRoom(type);                
                 break;
             default:
                 type = Type.REST;
                 break;
         }        
+    }
+    
+    protected MapChunk() {
+        
     }
 
     public boolean isInside(int x, int y, int z) {        

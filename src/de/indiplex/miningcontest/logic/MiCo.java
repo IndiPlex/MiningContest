@@ -18,6 +18,8 @@
 package de.indiplex.miningcontest.logic;
 
 import de.indiplex.manager.IPMAPI;
+import de.indiplex.miningcontest.generator.Base;
+import de.indiplex.miningcontest.generator.Outpost;
 import de.indiplex.miningcontest.map.Map;
 import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.map.MapParser;
@@ -42,7 +44,8 @@ public class MiCo {
     private Map map;
     private IPMAPI api;
     private MapChunk lobby;
-    private ArrayList<MapChunk> checkedChunks = new ArrayList<MapChunk>();
+    private ArrayList<WithDoors> checkedChunks = new ArrayList<WithDoors>();
+    private ArrayList<Outpost> outposts = new ArrayList<Outpost>();
     public long elapsedTime;
     public long startingTime;
     public GameThread gameThread;
@@ -61,14 +64,15 @@ public class MiCo {
         for (MapChunk mc : mapChunks) {
             if (mc.getType().equals(MapChunk.Type.BASE)) {
                 Team team = new Team(t, this);
-                team.setBase(mc);
+                team.setBase((Base) mc);
+                ((Base) mc).setTeam(team);
                 teams.add(team);
-                checkedChunks.add(mc);
+                checkedChunks.add((WithDoors) mc);
             } else if (mc.getType().equals(MapChunk.Type.LOBBY)) {
                 lobby = mc;
-                checkedChunks.add(mc);
             } else if (mc.getType().equals(MapChunk.Type.OUTPOST)) {
-                checkedChunks.add(mc);
+                checkedChunks.add((WithDoors) mc);
+                outposts.add((Outpost) mc);
             }
         }
     }
@@ -95,7 +99,7 @@ public class MiCo {
     }
 
     public void reset() {
-        for (Team t:teams) {
+        for (Team t : teams) {
             t.reset();
         }
         elapsedTime = 0;
@@ -136,7 +140,7 @@ public class MiCo {
         }
         return false;
     }
-    
+
     public boolean isInBase(Location loc) {
         return isInBase(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()) && loc.getWorld().getName().equalsIgnoreCase("ContestWorld");
     }
@@ -144,7 +148,7 @@ public class MiCo {
     public MapChunk getLobby() {
         return lobby;
     }
-    
+
     private boolean isInBase(int x, int y, int z) {
         for (Team t : teams) {
             MapChunk mc = t.getBase();
@@ -157,15 +161,28 @@ public class MiCo {
 
     public boolean canDestroy(int x, int y, int z, World world) {
         boolean b = false;
-        for (MapChunk mc:checkedChunks) {
+        for (MapChunk mc : outposts) {
             if (mc.isInside(x, y, z)) {
                 b = true;
                 break;
             }
         }
+        if (!b) {
+            for (Team t : teams) {
+                if (t.getBase().isInside(x, y, z)) {
+                    b = true;
+                    break;
+                }
+            }
+        }
+        if (!b) {
+            if (lobby.isInside(x, y, z)) {
+                b = true;
+            }
+        }
         return !(world.getName().equalsIgnoreCase("ContestWorld") && b);
     }
-    
+
     public boolean canDestroy(Location loc) {
         return canDestroy(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld());
     }
@@ -196,6 +213,10 @@ public class MiCo {
         if (nextTeam == teams.size()) {
             nextTeam = 0;
         }
+    }
+
+    public ArrayList<WithDoors> getCheckedChunks() {
+        return checkedChunks;
     }
 
     public void setNextTeam(int nextTeam) {

@@ -46,9 +46,7 @@ public class Map {
     public MapChunk[] getMapChunks() {
         MapChunk[] mcs = new MapChunk[21*21];
         for (int i=0;i<21;i++) {
-            for(int j=0;j<21;j++) {
-                mcs[i*21+j] = chunks[i][j];
-            }
+            System.arraycopy(chunks[i], 0, mcs, i*21, 21);
         }
         return mcs;
     }

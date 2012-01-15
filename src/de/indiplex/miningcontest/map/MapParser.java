@@ -17,6 +17,7 @@
  */
 package de.indiplex.miningcontest.map;
 
+import de.indiplex.miningcontest.generator.Outpost;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -69,7 +70,11 @@ public class MapParser {
                             cdata[cx][cy] = data[x*16+cx][y*16+cy];
                         }
                     }
-                    chunks[x][y] = new MapChunk(new Point(x-10, y-10), cdata);
+                    MapChunk mc = new MapChunk(new Point(x-10, y-10), cdata);
+                    if (mc.getType().equals(MapChunk.Type.OUTPOST)) {
+                        mc = new Outpost(mc.getPos(), data, mc.getRoom(), MapChunk.Type.OUTPOST);
+                    }
+                    chunks[x][y] = mc;
                 }
             }
             return new Map(wool, chunks, image);
