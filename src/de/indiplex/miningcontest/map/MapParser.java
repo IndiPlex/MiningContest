@@ -17,6 +17,7 @@
  */
 package de.indiplex.miningcontest.map;
 
+import de.indiplex.miningcontest.generator.Base;
 import de.indiplex.miningcontest.generator.Outpost;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -31,7 +32,7 @@ import javax.imageio.ImageIO;
  */
 public class MapParser {
     
-    public static final HashMap<Integer, Integer> wools = new HashMap<Integer, Integer>();
+    public static final HashMap<Integer, Integer> wools = new HashMap<Integer, Integer>();    
     
     static {
         wools.put(0xFFFFFFFF, 0x0);
@@ -54,7 +55,8 @@ public class MapParser {
             byte[][] wool = new byte[width][heigth];
             for (int x=0;x<width;x++) {
                 for (int y=0;y<heigth;y++) {
-                    int c = image.getRGB(x, y);
+                    int c = image.getRGB(x, y);  
+                    c = optimizeColor(c);
                     wool[x][y] = closestWoolColor(c);
                     data[x][y] = c;
                 }
@@ -73,6 +75,8 @@ public class MapParser {
                     MapChunk mc = new MapChunk(new Point(x-10, y-10), cdata);
                     if (mc.getType().equals(MapChunk.Type.OUTPOST)) {
                         mc = new Outpost(mc.getPos(), data, mc.getRoom(), MapChunk.Type.OUTPOST);
+                    } else if (mc.getType().equals(MapChunk.Type.BASE)) {
+                        mc = new Base(mc.getPos(), data, mc.getRoom(), MapChunk.Type.BASE);
                     }
                     chunks[x][y] = mc;
                 }
@@ -93,8 +97,26 @@ public class MapParser {
                 closest = v;
             }
         }        
-
-        return wools.get(closest).byteValue();
+        Integer get = wools.get(closest);
+        if (get==null) {
+            System.out.println(Integer.toHexString(of));
+            return 0;
+        }
+        return get.byteValue();
     }
-    
+    private static int optimizeColor(int of) {
+        int min = Integer.MAX_VALUE;
+        int closest = of;
+
+        for (int v : wools.keySet()) {
+            final int diff = Math.abs(v - of);
+
+            if (diff < min) {
+                min = diff;
+                closest = v;
+            }
+        }
+
+        return closest;
+    }
 }

@@ -44,10 +44,12 @@ public class Outpost extends MapChunk implements WithDoors {
         this.type = type;
         
         for (int x=0;x<16;x++) {
-            for (int y=0;y<16;y++) {
-                if (data[x][y]==Material.IRON_DOOR_BLOCK.getId()) {
-                    doors.add(new Location(null, pos.x*16+x, room.getStart()+1, pos.y*16+y));
-                    doors.add(new Location(null, pos.x*16+x, room.getStart()+2, pos.y*16+y));
+            for (int y=0;y<room.getHeigth();y++) {
+                for (int z=0;z<16;z++) {
+                    if (room.getData(x, y, z)==Material.IRON_DOOR_BLOCK.getId()) {
+                        Location loc = new Location(null, (pos.x-10)*16+x, room.getStart()+y, (pos.y-10)*16+y);
+                        doors.add(loc);
+                    }
                 }
             }
         }
@@ -75,6 +77,7 @@ public class Outpost extends MapChunk implements WithDoors {
         if (conState.get(t)>=100) {
             return;
         }
+        System.out.println("lololol");
         for (Team te:conState.keySet()) {
             if (te!=t) {
                 int n = conState.get(te)-5;

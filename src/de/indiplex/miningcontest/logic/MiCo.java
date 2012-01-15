@@ -26,6 +26,7 @@ import de.indiplex.miningcontest.map.MapParser;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -49,16 +50,17 @@ public class MiCo {
     public long elapsedTime;
     public long startingTime;
     public GameThread gameThread;
+    public StartThread startThread;
     private World micoWorld;
     private ArrayList<Player> players = new ArrayList<Player>(); // ArrayList to check players faster
 
     public MiCo() {
         this.elapsedTime = 0;
-        setMap("Map3.png");
+        setMap("Map4.png");
     }
 
     private void setMap(String mapName) {
-        map = MapParser.parseMap("plugins/IndiPlex Manager/config/Mining Contest/res/" + mapName);
+        map = MapParser.parseMap("plugins/IndiPlex Manager/config/Mining Contest/res/" + mapName);        
         MapChunk[] mapChunks = map.getMapChunks();
         int t = 0;
         for (MapChunk mc : mapChunks) {
@@ -111,10 +113,18 @@ public class MiCo {
     }
 
     public void init(int startTime, Integer[] intervals) {
-        new Thread(new StartThread(startTime, intervals, this)).start();
+        startThread = new StartThread(startTime, intervals, this);
+        new Thread(startThread).start();
     }
 
     public void start() {
+        Bukkit.getServer().broadcastMessage("The mining-contest starts now!");
+        for (Team t : teams) {
+            for (Player p : t.getMembers()) {
+                Location loc = new Location(Bukkit.getWorld("ContestWorld"), t.getBase().getPos().x*16+3, 53, t.getBase().getPos().y*16+3);
+                p.teleport(loc);
+            }
+        }
         for (Team t : teams) {
             players.addAll(t.getMembers());
         }

@@ -30,6 +30,7 @@ public class StartThread implements Runnable {
     private int startTime;
     private Integer[] intervals;
     private MiCo mico;
+    public boolean startNOW = false;
 
     public StartThread(MiCo mico) {
         this(10, new Integer[]{0, 5, 8, 9}, mico);
@@ -60,17 +61,11 @@ public class StartThread implements Runnable {
                 Bukkit.getServer().broadcastMessage("The mining-contest starts in " + (startTime - interv) + " minutes!");
                 interv = intervals[cInterv];
             }
-            if (currentTime - sTime > startTime * 60 * 1000) {
+            if (currentTime - sTime > startTime * 60 * 1000 || startNOW) {
                 break;
             }
         }
-        Bukkit.getServer().broadcastMessage("The mining-contest starts now!");
-        for (Team t : mico.getTeams()) {
-            for (Player p : t.getMembers()) {
-                Location loc = new Location(Bukkit.getWorld("ContestWorld"), t.getBase().getPos().x*16+3, 53, t.getBase().getPos().y*16+3);
-                p.teleport(loc);
-            }
-        }
+        
         mico.initializing = false;
         mico.start();
     }

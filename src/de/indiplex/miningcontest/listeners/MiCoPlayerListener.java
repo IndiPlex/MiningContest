@@ -71,7 +71,7 @@ public class MiCoPlayerListener extends PlayerListener {
             return;
         }
         if (b.getType().equals(Material.IRON_DOOR_BLOCK)) {
-            MapChunk mc = mico.getMap().getMapChunk(b.getChunk().getX(), b.getChunk().getZ());
+            MapChunk mc = mico.getMap().getMapChunk(b.getChunk().getX()+10, b.getChunk().getZ()+10);
             if (mc == null) {
                 return;
             }
