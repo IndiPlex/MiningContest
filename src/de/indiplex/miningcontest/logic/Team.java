@@ -20,14 +20,9 @@ package de.indiplex.miningcontest.logic;
 import de.indiplex.miningcontest.generator.Base;
 import de.indiplex.miningcontest.map.ColorMap;
 import de.indiplex.miningcontest.map.Map;
-import de.indiplex.miningcontest.map.MapChunk;
 import java.util.ArrayList;
 import java.util.HashMap;
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.Packet;
-import net.minecraft.server.Packet131ItemData;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -61,9 +56,10 @@ public class Team {
     }
         
     private void sendRawData(Player player, short mapId, byte[] data) {
-        Packet packet = new Packet131ItemData((short) Material.MAP.getId(), mapId, data);
-        EntityPlayer entity = ((CraftPlayer) player).getHandle();
-        entity.netServerHandler.sendPacket(packet);
+        /*net.minecraft.server.Packet packet = new net.minecraft.server.Packet131ItemData((short) Material.MAP.getId(), mapId, data);
+        org.bukkit.entity.EntityPlayer entity = ((org.bukkit.craftbukkit.entity.CraftPlayer) player).getHandle();
+        entity.netServerHandler.sendPacket(packet);*/
+        return;
     }
     
     public void sendMap(Player player, short mapId, byte[] data) {
@@ -135,4 +131,9 @@ public class Team {
         return base;
     }    
     
+    public void sendMessage(String msg) {
+        for (Player p:members) {
+            p.sendMessage(msg);
+        }
+    }
 }

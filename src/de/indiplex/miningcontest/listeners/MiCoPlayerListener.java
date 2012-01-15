@@ -78,8 +78,8 @@ public class MiCoPlayerListener extends PlayerListener {
             if (mc instanceof WithDoors) {
                 WithDoors t = (WithDoors) mc;
                 event.setCancelled(true);
-                if (t.getTeam()!=null && !t.getTeam().hasMember(event.getPlayer())) {
-                    event.getPlayer().sendMessage(ChatColor.RED + "This is not your base!");
+                if (t.getTeam() != null && !t.getTeam().hasMember(event.getPlayer())) {                    
+                    event.getPlayer().sendMessage(ChatColor.RED + "This is not your "+(t.getType()==MapChunk.Type.BASE?"Base":"Outpost")+"!");
                     return;
                 }
                 mico.gameThread.setDoor(b.getLocation());

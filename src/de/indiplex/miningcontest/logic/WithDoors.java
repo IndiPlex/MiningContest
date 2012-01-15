@@ -17,6 +17,7 @@
  */
 package de.indiplex.miningcontest.logic;
 
+import de.indiplex.miningcontest.map.MapChunk;
 import java.util.ArrayList;
 import org.bukkit.Location;
 
@@ -27,4 +28,5 @@ import org.bukkit.Location;
 public interface WithDoors {
     public ArrayList<Location> getDoors();
     public Team getTeam();
+    public MapChunk.Type getType();
 }
