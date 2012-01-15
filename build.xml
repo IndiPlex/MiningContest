@@ -2,4 +2,12 @@
 <project name="MiningContest" default="default" basedir=".">
     <description>Builds, tests, and runs the project MiningContest.</description>
     <import file="nbproject/build-impl.xml"/>
+    <target name="-pre-jar">
+        <copy flatten="false" todir="build/classes/res">
+            <fileset dir="res"/>
+        </copy>
+    </target>
+    <target name="-post-jar">
+        <copy file="${dist.jar}" flatten="true" todir="../release/" />        
+    </target>
 </project>

@@ -17,6 +17,7 @@
  */
 package de.indiplex.miningcontest.logic;
 
+import de.indiplex.miningcontest.generator.Base;
 import de.indiplex.miningcontest.map.ColorMap;
 import de.indiplex.miningcontest.map.Map;
 import de.indiplex.miningcontest.map.MapChunk;
@@ -25,7 +26,6 @@ import java.util.HashMap;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet;
 import net.minecraft.server.Packet131ItemData;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -40,9 +40,8 @@ public class Team {
     private ArrayList<Player> members;
     private long teamPoints;
     private HashMap<Player, Long> points;
-    private MapChunk base;
+    private Base base;
     private MiCo mico;
-    private ArrayList<Location> doors = new ArrayList<Location>();
 
     public Team(int number, MiCo mico) {
         this.number = number;
@@ -53,10 +52,6 @@ public class Team {
 
     public int getNumber() {
         return number;
-    }
-
-    public ArrayList<Location> getDoors() {
-        return doors;
     }
     
     public void reset() {
@@ -132,21 +127,11 @@ public class Team {
         return p;
     }
 
-    public void setBase(MapChunk base) {
+    public void setBase(Base base) {
         this.base = base;
-        for (int x=0;x<16;x++) {
-            for (int y=base.getRoom().getStart();y<base.getRoom().getStart()+base.getRoom().getHeigth();y++) {
-                for (int z=0;z<16;z++) {
-                    if (base.getRoom().getData(x, y-base.getRoom().getStart(), z)==Material.IRON_DOOR_BLOCK.getId()) {                        
-                        doors.add(new Location(null, base.getPos().x*16+x, y, base.getPos().y*16+z));
-                    }
-                }
-            }
-        }
-        
     }
 
-    public MapChunk getBase() {
+    public Base getBase() {
         return base;
     }    
     
