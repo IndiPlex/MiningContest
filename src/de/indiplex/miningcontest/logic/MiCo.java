@@ -149,6 +149,10 @@ public class MiCo {
         return lobby;
     }
 
+    public ArrayList<Outpost> getOutposts() {
+        return outposts;
+    }
+
     private boolean isInBase(int x, int y, int z) {
         for (Team t : teams) {
             MapChunk mc = t.getBase();

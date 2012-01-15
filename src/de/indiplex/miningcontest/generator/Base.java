@@ -22,6 +22,7 @@ import de.indiplex.miningcontest.logic.WithDoors;
 import de.indiplex.miningcontest.map.MapChunk;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -32,7 +33,7 @@ import org.bukkit.Material;
 public class Base extends MapChunk implements WithDoors {
     
     private ArrayList<Location> doors = new ArrayList<Location>();
-    private Team team;
+    private Team team;    
     
     public Base(Point pos, int[][] data, Room room, Type type) {
         super();
@@ -57,12 +58,12 @@ public class Base extends MapChunk implements WithDoors {
 
     @Override
     public Team getTeam() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return team;
     }
 
     @Override
     public ArrayList<Location> getDoors() {
         return doors;
-    }
+    }        
     
 }

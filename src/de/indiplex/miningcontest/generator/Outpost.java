@@ -22,6 +22,7 @@ import de.indiplex.miningcontest.logic.WithDoors;
 import de.indiplex.miningcontest.map.MapChunk;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -30,10 +31,10 @@ import org.bukkit.Material;
  * @author IndiPlex <Cartan12@indiplex.de>
  */
 public class Outpost extends MapChunk implements WithDoors {
-
-    private boolean conquered = false;
+    
     private Team team = null;
     private ArrayList<Location> doors = new ArrayList<Location>();
+    private HashMap<Team,Integer> conState = new HashMap<Team, Integer>();
     
     public Outpost(Point pos, int[][] data, Room room, Type type) {
         super();
@@ -52,18 +53,15 @@ public class Outpost extends MapChunk implements WithDoors {
         }
     }
 
-    public void setConquered(boolean conquered) {
-        this.conquered = conquered;
-    }
-
     public void setTeam(Team team) {
         this.team = team;
     }
 
     public boolean isConquered() {
-        return conquered;
+        return team!=null;
     }
 
+    @Override
     public Team getTeam() {
         return team;
     }
@@ -71,6 +69,28 @@ public class Outpost extends MapChunk implements WithDoors {
     @Override
     public ArrayList<Location> getDoors() {
         return doors;
+    }
+    
+    public void increaseConState(Team t) {        
+        if (conState.get(t)>=100) {
+            return;
+        }
+        for (Team te:conState.keySet()) {
+            if (te!=t) {
+                int n = conState.get(te)-5;
+                if (n<0) continue;
+                conState.put(te, n);
+            }
+        }
+        conState.put(t, conState.get(t)+5);
+        if (conState.get(t)>=100) {
+            team = t;
+            t.sendMessage("You conquered a base!");
+        }
+    }
+    
+    public boolean isInside(Location loc) {
+        return super.isInside(loc.getBlockZ(), loc.getBlockY(), loc.getBlockZ());
     }
     
 }

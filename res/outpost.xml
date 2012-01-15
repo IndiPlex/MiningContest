@@ -9,8 +9,7 @@
 	</layer>
 	<layer>
 		<from>2</from>
-		<to>10</to>
-		<area>AIR</area>		
+		<to>10</to>	
 		<row>
 			<val>1</val>
 			<val>16</val>
@@ -26,9 +25,6 @@
 	</layer>
 	<layer>
 		<val>2</val>
-		<area>
-            <id>AIR</id>
-        </area>
 		<point>
 			<x>2</x>
 			<y>2</y>
@@ -52,31 +48,6 @@
 	</layer>
 	<layer>
         <val>11</val>
-        <area>
-            <id>AIR</id>
-        </area>		
-		<point>
-			<x>8</x>
-			<y>8</y>
-			<id>GLOWSTONE</id>
-		</point>
-		<point>
-			<x>9</x>
-			<y>9</y>
-			<id>GLOWSTONE</id>
-		</point>
-		<point>
-			<x>8</x>
-			<y>9</y>
-			<id>GLOWSTONE</id>
-		</point>
-		<point>
-			<x>9</x>
-			<y>8</y>
-			<id>GLOWSTONE</id>
-		</point>
-	</layer>
-	<layer>
         <val>1</val>
 		<point>
 			<x>8</x>
@@ -98,5 +69,28 @@
 			<y>8</y>
 			<id>GLOWSTONE</id>
 		</point>
-    </layer>
+	</layer>
+    <layer>
+		<val>2</val>
+		<point>
+			<x>1</x>
+			<y>9</y>
+			<id>AIR</id>
+		</point>
+		<point>
+			<x>9</x>
+			<y>1</y>
+			<id>AIR</id>
+		</point>
+		<point>
+			<x>16</x>
+			<y>9</y>
+			<id>AIR</id>
+		</point>
+		<point>
+			<x>9</x>
+			<y>16</y>
+			<id>AIR</id>
+		</point>
+	</layer>
 </room>

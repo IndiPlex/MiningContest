@@ -17,7 +17,7 @@
  */
 package de.indiplex.miningcontest.logic;
 
-import de.indiplex.miningcontest.map.MapChunk;
+import de.indiplex.miningcontest.generator.Outpost;
 import de.indiplex.miningcontest.util.Door;
 import java.util.HashMap;
 import org.bukkit.Bukkit;
@@ -80,7 +80,7 @@ public class GameThread implements Runnable {
                         }
                     }
                 }
-                for (WithDoors t:mico.getCheckedChunks()) {                    
+                for (WithDoors t : mico.getCheckedChunks()) {
                     for (Location loc : t.getDoors()) {
                         if (loc.getWorld() == null) {
                             loc.setWorld(Bukkit.getWorld("ContestWorld"));
@@ -96,9 +96,20 @@ public class GameThread implements Runnable {
                     }
                 }
                 // TODO: Write the code to update signs
-                
+
                 lastCheck = currTime;
-            }            
+            }
+            if (currTime - lastCheck >= 1000) {
+                for (Team t : mico.getTeams()) {
+                    for (Player p : t.getMembers()) {
+                        for (Outpost o : mico.getOutposts()) {
+                            if (o.isInside(p.getLocation())) {
+                                o.increaseConState(t);
+                            }
+                        }
+                    }
+                }
+            }
             if (mico.elapsedTime >= duration) {
             }
         }
