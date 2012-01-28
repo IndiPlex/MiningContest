@@ -17,11 +17,13 @@
  */
 package de.indiplex.miningcontest;
 
+import de.indiplex.manager.IPMAPI;
 import de.indiplex.manager.IPMPlugin;
 import de.indiplex.miningcontest.commands.MiCoCommands;
 import de.indiplex.miningcontest.generator.ContestChunkGenerator;
 import de.indiplex.miningcontest.listeners.MiCoBlockListener;
 import de.indiplex.miningcontest.listeners.MiCoPlayerListener;
+import de.indiplex.miningcontest.listeners.MiCoSpecialListener;
 import de.indiplex.miningcontest.logic.MiCo;
 import de.indiplex.multiworlds.MultiWorldsAPI;
 import java.io.File;
@@ -34,12 +36,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityListener;
-import org.bukkit.event.player.PlayerListener;
 
 /**
  * 
@@ -54,7 +53,7 @@ public class MiningContest extends IPMPlugin {
     private static MiCo mc;
 
     @Override
-    public void onLoad() {                
+    public void onIPMLoad() {                
         try {
             String s = getClass().getResource("").getPath().split("\\!")[0];            
             s = "plugins"+s.split("plugins")[1]+"plugins"+s.split("plugins")[2];
@@ -74,17 +73,20 @@ public class MiningContest extends IPMPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }        
+    }
 
     @Override
     public void onDisable() {
+        if (mc.started) {
+            mc.stop();
+        }
         printDisabled(pre);
     }
 
     @Override
     public void onEnable() {
-        MultiWorldsAPI API = (MultiWorldsAPI) getAPI().getAPI("MultiWorlds");
-        MAPI = API;
+        MultiWorldsAPI api = (MultiWorldsAPI) getAPI().getAPI("MultiWorlds");
+        MAPI = api;
         log.info(pre + "Hooked into MultiWorlds...");
         MAPI.setGenerator("contest", ContestChunkGenerator.class);
         contestWorld = MAPI.registerWorld("ContestWorld", "contest", World.Environment.NORMAL, true);
@@ -96,12 +98,13 @@ public class MiningContest extends IPMPlugin {
         //contestWorld.setSpawnFlags(false, true);
 
         getCommand("MiCo").setExecutor(new MiCoCommands(this));
-        BlockListener bListener = new MiCoBlockListener(mc);
-        PlayerListener pListener = new MiCoPlayerListener(mc);
+        Listener bListener = new MiCoBlockListener(mc);
+        Listener pListener = new MiCoPlayerListener(mc);
+        Listener sListener = new MiCoSpecialListener(mc);
         
-        EntityListener el = new EntityListener() {
+        Listener eListener = new Listener() {
 
-            @Override
+            @EventHandler
             public void onCreatureSpawn(CreatureSpawnEvent event) {
                 if (event.getLocation().getWorld().getName().equalsIgnoreCase("ContestWorld") && !event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
                     event.setCancelled(true);
@@ -110,21 +113,14 @@ public class MiningContest extends IPMPlugin {
             
         };
         
-        getServer().getPluginManager().registerEvent(Type.CREATURE_SPAWN, el, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, bListener, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, bListener, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.BLOCK_PLACE, bListener, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.BLOCK_CANBUILD, bListener, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.BLOCK_DAMAGE, bListener, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.REDSTONE_CHANGE, bListener, Priority.High, this);
+        getServer().getPluginManager().registerEvents(bListener, this);
+        getServer().getPluginManager().registerEvents(pListener, this);
+        getServer().getPluginManager().registerEvents(eListener, this);
+        getServer().getPluginManager().registerEvents(sListener, this);
         
-        getServer().getPluginManager().registerEvent(Type.PLAYER_DROP_ITEM, pListener, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, pListener, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.PLAYER_RESPAWN, pListener, Priority.High, this);
-                
         printEnabled(pre);
     }
-    
+
     public static MiCo getCurrentContest() {
         return mc;
     }
@@ -167,6 +163,17 @@ public class MiningContest extends IPMPlugin {
         }
         fout.close();
         in.close();
+    }
+    
+    private static IPMAPI API;
+
+    @Override
+    protected void init(IPMAPI API) {
+        MiningContest.API = API;
+    }
+
+    public static IPMAPI getAPI() {
+        return API;
     }
     
 }

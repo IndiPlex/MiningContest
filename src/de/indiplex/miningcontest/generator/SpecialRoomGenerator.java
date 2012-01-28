@@ -53,7 +53,7 @@ public class SpecialRoomGenerator extends BlockPopulator {
         }
         MapChunk mapChunk = map.getMapChunk(cx, cz);
         MapChunk.Type t = mapChunk.getType();
-        
+
         if (t.equals(Type.REST)) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
@@ -78,29 +78,31 @@ public class SpecialRoomGenerator extends BlockPopulator {
             Room room = mapChunk.getRoom();
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
-                    for (int y = room.getStart(); y <room.getHeigth()+room.getStart(); y++) {
+                    for (int y = room.getStart(); y < room.getHeigth() + room.getStart(); y++) {
                         int data = room.getData(x, y - room.getStart(), z);
                         byte sdata = room.getSpecialData(x, y - room.getStart(), z);
                         Block b = source.getBlock(x, y, z);
-                        if (data != -1) {                  
-                            b.setTypeId(data);                            
+                        if (data != -1) {
+                            b.setTypeId(data);
                         }
-                        if (data!=-1) {
-                            if (data==Material.MOB_SPAWNER.getId()) {
-                                CreatureSpawner cs = (CreatureSpawner) b.getState();
-                                CreatureType ct = CreatureType.PIG;
-                                switch(sdata) {
-                                    case 0:
-                                        ct = CreatureType.ZOMBIE;
-                                        break;
-                                    case 1:
-                                        ct = CreatureType.SKELETON;
-                                        break;
-                                    case 2:
-                                        ct = CreatureType.SPIDER;
-                                        break;
+                        if (data != -1) {
+                            if (data == Material.MOB_SPAWNER.getId()) {
+                                if (b.getState() instanceof CreatureSpawner) {
+                                    CreatureSpawner cs = (CreatureSpawner) b.getState();
+                                    CreatureType ct = CreatureType.PIG;
+                                    switch (sdata) {
+                                        case 0:
+                                            ct = CreatureType.ZOMBIE;
+                                            break;
+                                        case 1:
+                                            ct = CreatureType.SKELETON;
+                                            break;
+                                        case 2:
+                                            ct = CreatureType.SPIDER;
+                                            break;
+                                    }
+                                    cs.setCreatureType(ct);
                                 }
-                                cs.setCreatureType(ct);
                             } else {
                                 b.setData(sdata);
                             }

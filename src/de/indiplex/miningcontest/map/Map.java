@@ -56,6 +56,11 @@ public class Map {
     }
 
     public MapChunk getMapChunk(int x, int y) {
-        return chunks[x][y];
+        try {
+            return chunks[x][y];
+        } catch(ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

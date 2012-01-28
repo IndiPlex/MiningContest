@@ -21,10 +21,11 @@ import de.indiplex.miningcontest.MiningContest;
 import de.indiplex.miningcontest.logic.MiCo;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -33,7 +34,7 @@ import org.bukkit.event.block.SignChangeEvent;
  *
  * @author IndiPlex <kahabrakh@indiplex.de>
  */
-public class MiCoBlockListener extends BlockListener {    
+public class MiCoBlockListener implements Listener {
     
     private MiCo mico;
 
@@ -41,12 +42,13 @@ public class MiCoBlockListener extends BlockListener {
         this.mico = mico;
     }
 
-    @Override
+    @EventHandler
     public void onBlockCanBuild(BlockCanBuildEvent event) {
        event.setBuildable(true);
+       
     }
     
-    @Override
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {        
         if (!MiningContest.getCurrentContest().canDestroy(event.getBlock().getLocation()) && !event.getPlayer().isOp()) {
             event.setCancelled(true);
@@ -54,7 +56,7 @@ public class MiCoBlockListener extends BlockListener {
         }
     }
 
-    @Override
+    @EventHandler
     public void onBlockDamage(BlockDamageEvent event) {
         if (!MiningContest.getCurrentContest().canDestroy(event.getBlock().getLocation()) && !event.getPlayer().isOp()) {
             event.setCancelled(true);
@@ -62,7 +64,7 @@ public class MiCoBlockListener extends BlockListener {
         }
     }
 
-    @Override
+    @EventHandler
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
         Block b = event.getBlock();
         if (!b.getWorld().getName().equalsIgnoreCase("ContestWorld")) {
@@ -73,7 +75,7 @@ public class MiCoBlockListener extends BlockListener {
         }
     }
 
-    @Override
+    @EventHandler
     public void onSignChange(SignChangeEvent event) {
         if (!MiningContest.getCurrentContest().canDestroy(event.getBlock().getLocation()) && !event.getPlayer().isOp()) {
             event.setCancelled(true);
@@ -81,7 +83,7 @@ public class MiCoBlockListener extends BlockListener {
         }
     }
 
-    @Override
+    @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (!MiningContest.getCurrentContest().canDestroy(event.getBlock().getLocation()) && !event.getPlayer().isOp()) {
             event.setCancelled(true);

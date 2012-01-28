@@ -18,7 +18,7 @@
 package de.indiplex.miningcontest.generator;
 
 import de.indiplex.miningcontest.logic.Team;
-import de.indiplex.miningcontest.logic.WithDoors;
+import de.indiplex.miningcontest.logic.WithDoorsAndSigns;
 import de.indiplex.miningcontest.map.MapChunk;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -29,10 +29,11 @@ import org.bukkit.Material;
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Base extends MapChunk implements WithDoors {
+public class Base extends MapChunk implements WithDoorsAndSigns {
     
     private ArrayList<Location> doors = new ArrayList<Location>();
-    private Team team;    
+    private Team team;
+    private Location sign;
     
     public Base(Point pos, int[][] data, Room room, Type type) {
         super();
@@ -45,10 +46,11 @@ public class Base extends MapChunk implements WithDoors {
             for (int y=0;y<room.getHeigth();y++) {
                 for (int z=0;z<16;z++) {
                     if (room.getData(x, y, z)==Material.IRON_DOOR_BLOCK.getId()) {
-                        System.out.println(x+" "+y+" "+z);
-                        Location loc = new Location(null, (pos.x)*16+x, room.getStart()+y, (pos.y)*16+y);
-                        System.out.print(loc);
+                        Location loc = new Location(null, pos.x*16+x, room.getStart()+y, pos.y*16+z);
                         doors.add(loc);
+                    } else if (room.getData(x, y, z)==Material.SIGN.getId() || room.getData(x, y, z)==Material.SIGN_POST.getId()) {
+                        Location loc = new Location(null, pos.x*16+x, room.getStart()+y, pos.y*16+z);
+                        sign = loc;
                     }
                 }
             }
@@ -62,6 +64,11 @@ public class Base extends MapChunk implements WithDoors {
     @Override
     public Team getTeam() {
         return team;
+    }
+    
+    @Override
+    public Location getSign() {
+        return sign;
     }
 
     @Override

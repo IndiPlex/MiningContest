@@ -18,11 +18,14 @@
 package de.indiplex.miningcontest.logic;
 
 import de.indiplex.manager.IPMAPI;
+import de.indiplex.miningcontest.MiningContest;
 import de.indiplex.miningcontest.generator.Base;
 import de.indiplex.miningcontest.generator.Outpost;
+import de.indiplex.miningcontest.logic.classes.MCClass;
 import de.indiplex.miningcontest.map.Map;
 import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.map.MapParser;
+import de.indiplex.virtualchests.VCAPI;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
@@ -45,22 +48,25 @@ public class MiCo {
     private Map map;
     private IPMAPI api;
     private MapChunk lobby;
-    private ArrayList<WithDoors> checkedChunks = new ArrayList<WithDoors>();
+    private ArrayList<WithDoorsAndSigns> checkedChunks = new ArrayList<WithDoorsAndSigns>();
     private ArrayList<Outpost> outposts = new ArrayList<Outpost>();
     public long elapsedTime;
     public long startingTime;
     public GameThread gameThread;
     public StartThread startThread;
     private World micoWorld;
+    private Shop shop;
     private ArrayList<Player> players = new ArrayList<Player>(); // ArrayList to check players faster
 
     public MiCo() {
         this.elapsedTime = 0;
-        setMap("Map4.png");
+        setMap("Map3.png");
+        shop = new Shop(this);
+        shop.init();
     }
 
     private void setMap(String mapName) {
-        map = MapParser.parseMap("plugins/IndiPlex Manager/config/Mining Contest/res/" + mapName);        
+        map = MapParser.parseMap("plugins/IndiPlex Manager/config/Mining Contest/res/" + mapName);
         MapChunk[] mapChunks = map.getMapChunks();
         int t = 0;
         for (MapChunk mc : mapChunks) {
@@ -69,14 +75,19 @@ public class MiCo {
                 team.setBase((Base) mc);
                 ((Base) mc).setTeam(team);
                 teams.add(team);
-                checkedChunks.add((WithDoors) mc);
+                checkedChunks.add((WithDoorsAndSigns) mc);
             } else if (mc.getType().equals(MapChunk.Type.LOBBY)) {
                 lobby = mc;
             } else if (mc.getType().equals(MapChunk.Type.OUTPOST)) {
-                checkedChunks.add((WithDoors) mc);
+                checkedChunks.add((WithDoorsAndSigns) mc);
                 outposts.add((Outpost) mc);
             }
         }
+        System.out.println(outposts.size());
+    }
+
+    public Shop getShop() {
+        return shop;
     }
 
     public Map getMap() {
@@ -91,10 +102,17 @@ public class MiCo {
         return players;
     }
 
-    public void end() {
+    public void stop() {
+        VCAPI vc = (VCAPI) MiningContest.getAPI().getAPI("vc");
         for (Team t : teams) {
             for (Player p : t.getMembers()) {
                 p.sendMessage("You got " + t.getPoints(p));
+                World w = Bukkit.getWorlds().get(0);
+                p.teleport(w.getSpawnLocation());
+                
+                vc.fillInventory(p.getInventory(), "mico_"+p.getName());
+                vc.removeInventory("mico_"+p.getName());
+                p.updateInventory();
             }
         }
         reset();
@@ -119,10 +137,15 @@ public class MiCo {
 
     public void start() {
         Bukkit.getServer().broadcastMessage("The mining-contest starts now!");
+        VCAPI vc = (VCAPI) MiningContest.getAPI().getAPI("vc");
         for (Team t : teams) {
             for (Player p : t.getMembers()) {
-                Location loc = new Location(Bukkit.getWorld("ContestWorld"), t.getBase().getPos().x*16+3, 53, t.getBase().getPos().y*16+3);
+                Location loc = new Location(Bukkit.getWorld("ContestWorld"), t.getBase().getPos().x * 16 + 3, 53, t.getBase().getPos().y * 16 + 3);
                 p.teleport(loc);
+                
+                vc.storeInventory(p.getInventory(), "mico_"+p.getName());
+                p.getInventory().clear();
+                p.updateInventory();
             }
         }
         for (Team t : teams) {
@@ -153,6 +176,38 @@ public class MiCo {
 
     public boolean isInBase(Location loc) {
         return isInBase(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()) && loc.getWorld().getName().equalsIgnoreCase("ContestWorld");
+    }
+
+    public boolean isInOutpost(Location loc) {
+        return isInOutpost(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()) && loc.getWorld().getName().equalsIgnoreCase("ContestWorld");
+    }
+
+    public boolean isInsideTeamArea(Player player) {
+        Team t = getTeam(player);
+        Location loc = player.getLocation();
+        if (!loc.getWorld().getName().equalsIgnoreCase("ContestWorld")) {
+            return false;
+        }
+        if (t.getBase().isInside(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())) {
+            return true;
+        }
+        for (Outpost out:outposts) {
+            if (out.getTeam().equals(t)) {
+                if (out.isInside(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isInOutpost(int x, int y, int z) {
+        for (MapChunk mc : outposts) {
+            if (mc.isInside(x, y, z)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public MapChunk getLobby() {
@@ -229,7 +284,7 @@ public class MiCo {
         }
     }
 
-    public ArrayList<WithDoors> getCheckedChunks() {
+    public ArrayList<WithDoorsAndSigns> getCheckedChunks() {
         return checkedChunks;
     }
 
@@ -251,21 +306,43 @@ public class MiCo {
     }
 
     public void printPoints() {
+        Team winningTeam = getWinningTeam();
+        for (Team t : teams) {
+            for (Player p : t.getMembers()) {
+                printPoints(p, t, winningTeam);
+            }
+        }
+    }
+    
+    public void printPoints(Player player) {
+        printPoints(player, getTeam(player), getWinningTeam());
+    }
+    
+    private void printPoints(Player p, Team pTeam, Team winningTeam) {
+        p.sendMessage("You have " + pTeam.getPoints(p) + " points and your teams has " + pTeam.getTeamPoints() + " points!");
+                if (pTeam.equals(winningTeam)) {
+                    p.sendMessage("Your team is winning :)");
+                } else {
+                    p.sendMessage("Your team is losing :(");
+                }
+    }
+    
+    public Team getWinningTeam() {
         Team winningTeam = null;
         for (Team t : teams) {
             if (winningTeam == null || t.getTeamPoints() > winningTeam.getTeamPoints()) {
                 winningTeam = t;
             }
         }
+        return winningTeam;
+    }
+
+    public MCClass getClass(Player p) {
         for (Team t : teams) {
-            for (Player p : t.getMembers()) {
-                p.sendMessage("You have " + t.getPoints(p) + " points and your teams has " + t.getTeamPoints() + " points!");
-                if (t.equals(winningTeam)) {
-                    p.sendMessage("Your team is winning :)");
-                } else {
-                    p.sendMessage("Your team is winning :(");
-                }
+            if (t.hasMember(p)) {
+                return t.getClass(p);
             }
         }
+        return null;
     }
 }

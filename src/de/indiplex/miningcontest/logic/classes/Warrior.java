@@ -23,10 +23,10 @@ import org.bukkit.entity.Player;
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Hunter extends MCClass{
+public class Warrior extends MCClass {
 
-    public Hunter(Player player) {
-        super(player, Type.HUNTER);
+    public Warrior(Player player) {
+        super(player, Type.WARRIOR);
     }
     
 }
