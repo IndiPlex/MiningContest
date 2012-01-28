@@ -44,9 +44,8 @@ public class MapParser {
         wools.put(0xFF00FFFF, 0x3);        
     }
     
-    public static Map parseMap(String mapName) {
+    public static Map parseMap(File mapFile) {
         try {            
-            File mapFile = new File(mapName);
             BufferedImage image = ImageIO.read(mapFile);
             int width = image.getWidth();
             int heigth = image.getHeight();

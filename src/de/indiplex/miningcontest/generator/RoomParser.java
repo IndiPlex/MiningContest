@@ -17,7 +17,9 @@
  */
 package de.indiplex.miningcontest.generator;
 
+import de.indiplex.miningcontest.MiningContest;
 import de.indiplex.miningcontest.map.MapChunk;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,7 +73,8 @@ public class RoomParser {
             XMLReader xmlReader = XMLReaderFactory.createXMLReader();
             RoomContentHandler roomContentHandler = new RoomContentHandler();
             xmlReader.setContentHandler(roomContentHandler);
-            xmlReader.parse(new InputSource(new FileInputStream("plugins/IndiPlex Manager/config/Mining Contest/res/" + type.toString().toLowerCase() + ".xml")));
+            String fName = "res/" + type.toString().toLowerCase() + ".xml";
+            xmlReader.parse(new InputSource(new FileInputStream(new File(MiningContest.getAPI().getDataFolder(), fName))));
             Room room = roomContentHandler.getRoom();
             rp.rooms.put(type, room);
             return room;
