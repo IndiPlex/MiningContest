@@ -27,6 +27,7 @@ import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.map.MapParser;
 import de.indiplex.virtualchests.VCAPI;
 import java.awt.Point;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import org.bukkit.Bukkit;
@@ -66,7 +67,7 @@ public class MiCo {
     }
 
     private void setMap(String mapName) {
-        map = MapParser.parseMap("plugins/IndiPlex Manager/config/Mining Contest/res/" + mapName);
+        map = MapParser.parseMap(new File(MiningContest.getAPI().getDataFolder(), "res/"+mapName));
         MapChunk[] mapChunks = map.getMapChunks();
         int t = 0;
         for (MapChunk mc : mapChunks) {
