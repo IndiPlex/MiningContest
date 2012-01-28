@@ -17,11 +17,12 @@
  */
 package de.indiplex.miningcontest.listeners;
 
-import de.indiplex.miningcontest.MiningContest;
 import de.indiplex.miningcontest.logic.MiCo;
 import de.indiplex.miningcontest.logic.PointTable;
 import de.indiplex.miningcontest.logic.Team;
-import de.indiplex.miningcontest.logic.WithDoors;
+import de.indiplex.miningcontest.logic.WithDoorsAndSigns;
+import de.indiplex.miningcontest.logic.classes.MCClass;
+import de.indiplex.miningcontest.logic.classes.MCClass.Type;
 import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.util.Door;
 import org.bukkit.ChatColor;
@@ -29,16 +30,19 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 /**
  *
  * @author IndiPlex <kahabrakh@indiplex.de>
  */
-public class MiCoPlayerListener extends PlayerListener {
+public class MiCoPlayerListener implements Listener {
 
     private MiCo mico;
 
@@ -46,10 +50,10 @@ public class MiCoPlayerListener extends PlayerListener {
         this.mico = mico;
     }
 
-    @Override
+    @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        if (mico.isMiCoPlayer(player) && MiningContest.getCurrentContest().isInBase(player.getLocation())) {
+        if (mico.isMiCoPlayer(player) && mico.isInsideTeamArea(player)) {
             Material mat = event.getItemDrop().getItemStack().getType();
             int amount = event.getItemDrop().getItemStack().getAmount();
             Integer points = PointTable.getPoints(mat);
@@ -64,22 +68,51 @@ public class MiCoPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler(priority= EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Block b = event.getClickedBlock();
-        if (b == null || !b.getWorld().getName().equalsIgnoreCase("ContestWorld") || !mico.started) {
+        if (b == null || !b.getWorld().getName().equalsIgnoreCase("ContestWorld") || !mico.started || !mico.isMiCoPlayer(event.getPlayer())) {
             return;
         }
+        Type ct = mico.getClass(event.getPlayer()).getType();
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            switch (b.getType()) {
+                case WORKBENCH:
+                    if (ct!=Type.CRAFTER) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    break;
+                case FURNACE:
+                    if (ct!=Type.MINER) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    break;
+                case BREWING_STAND:
+                    if (ct!=Type.WIZZARD) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    break;
+                case ENCHANTMENT_TABLE:
+                    if (ct!=Type.WIZZARD) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    break;
+            }
+        }
         if (b.getType().equals(Material.IRON_DOOR_BLOCK)) {
-            MapChunk mc = mico.getMap().getMapChunk(b.getChunk().getX()+10, b.getChunk().getZ()+10);
+            MapChunk mc = mico.getMap().getMapChunk(b.getChunk().getX() + 10, b.getChunk().getZ() + 10);
             if (mc == null) {
                 return;
             }
-            if (mc instanceof WithDoors) {
-                WithDoors t = (WithDoors) mc;
+            if (mc instanceof WithDoorsAndSigns) {
+                WithDoorsAndSigns t = (WithDoorsAndSigns) mc;
                 event.setCancelled(true);
-                if (t.getTeam() != null && !t.getTeam().hasMember(event.getPlayer())) {                    
-                    event.getPlayer().sendMessage(ChatColor.RED + "This is not your "+(t.getType()==MapChunk.Type.BASE?"Base":"Outpost")+"!");
+                if (t.getTeam() != null && !t.getTeam().hasMember(event.getPlayer())) {
+                    event.getPlayer().sendMessage(ChatColor.RED + "This is not your " + (t.getType() == MapChunk.Type.BASE ? "Base" : "Outpost") + "!");
                     return;
                 }
                 mico.gameThread.setDoor(b.getLocation());
@@ -89,7 +122,7 @@ public class MiCoPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         if (mico.isMiCoPlayer(event.getPlayer())) {
             event.setRespawnLocation(mico.getTeam(event.getPlayer()).getBase().getSpawnLoc());

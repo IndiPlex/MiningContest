@@ -18,11 +18,12 @@
 package de.indiplex.miningcontest.generator;
 
 import de.indiplex.miningcontest.logic.Team;
-import de.indiplex.miningcontest.logic.WithDoors;
+import de.indiplex.miningcontest.logic.WithDoorsAndSigns;
 import de.indiplex.miningcontest.map.MapChunk;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -30,25 +31,29 @@ import org.bukkit.Material;
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Outpost extends MapChunk implements WithDoors {
-    
+public class Outpost extends MapChunk implements WithDoorsAndSigns {
+
     private Team team = null;
     private ArrayList<Location> doors = new ArrayList<Location>();
-    private HashMap<Team,Integer> conState = new HashMap<Team, Integer>();
-    
+    private Location sign;
+    private HashMap<Team, Integer> conState = new HashMap<Team, Integer>();
+
     public Outpost(Point pos, int[][] data, Room room, Type type) {
         super();
         this.pos = pos;
         this.data = data;
         this.room = room;
         this.type = type;
-        
-        for (int x=0;x<16;x++) {
-            for (int y=0;y<room.getHeigth();y++) {
-                for (int z=0;z<16;z++) {
-                    if (room.getData(x, y, z)==Material.IRON_DOOR_BLOCK.getId()) {
-                        Location loc = new Location(null, (pos.x-10)*16+x, room.getStart()+y, (pos.y-10)*16+y);
+
+        for (int x = 0; x < 16; x++) {
+            for (int y = 0; y < room.getHeigth(); y++) {
+                for (int z = 0; z < 16; z++) {
+                    if (room.getData(x, y, z) == Material.IRON_DOOR_BLOCK.getId()) {
+                        Location loc = new Location(null, pos.x * 16 + x, room.getStart() + y, pos.y * 16 + z);
                         doors.add(loc);
+                    } else if (room.getData(x, y, z)==Material.SIGN.getId() || room.getData(x, y, z)==Material.SIGN_POST.getId()) {
+                        Location loc = new Location(null, pos.x*16+x, room.getStart()+y, pos.y*16+z);
+                        sign = loc;
                     }
                 }
             }
@@ -59,8 +64,13 @@ public class Outpost extends MapChunk implements WithDoors {
         this.team = team;
     }
 
+    @Override
+    public Location getSign() {
+        return sign;
+    }
+
     public boolean isConquered() {
-        return team!=null;
+        return team != null;
     }
 
     @Override
@@ -72,28 +82,45 @@ public class Outpost extends MapChunk implements WithDoors {
     public ArrayList<Location> getDoors() {
         return doors;
     }
-    
-    public void increaseConState(Team t) {        
-        if (conState.get(t)>=100) {
+
+    public void increaseConState(Team t) {
+        if (conState.get(t)==null) {
+            conState.put(t, 0);
+        }
+        if (conState.get(t) >= 100) {
             return;
         }
         System.out.println("lololol");
-        for (Team te:conState.keySet()) {
-            if (te!=t) {
-                int n = conState.get(te)-5;
-                if (n<0) continue;
+        for (Team te : conState.keySet()) {
+            if (te != t) {
+                int n = conState.get(te) - 5;
+                if (n < 0) {
+                    continue;
+                }
                 conState.put(te, n);
             }
         }
-        conState.put(t, conState.get(t)+5);
-        if (conState.get(t)>=100) {
+        conState.put(t, conState.get(t) + 5);
+        if (conState.get(t) >= 100) {
             team = t;
             t.sendMessage("You conquered a base!");
         }
     }
-    
+
     public boolean isInside(Location loc) {
-        return super.isInside(loc.getBlockZ(), loc.getBlockY(), loc.getBlockZ());
+        return super.isInside(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+    
+    public int getConStateSize() {
+        return conState.size();
+    }
+    
+    public Set<Team> getConStateKeys() {
+        return conState.keySet();
+    }
+    
+    public int getConState(Team t) {        
+        return conState.get(t);
     }
     
 }

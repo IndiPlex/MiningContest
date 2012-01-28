@@ -15,18 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.indiplex.miningcontest.logic.classes;
+package de.indiplex.miningcontest.logic;
 
-import org.bukkit.entity.Player;
+import de.indiplex.miningcontest.map.MapChunk;
+import java.util.ArrayList;
+import org.bukkit.Location;
 
 /**
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Hunter extends MCClass{
-
-    public Hunter(Player player) {
-        super(player, Type.HUNTER);
-    }
-    
+public interface WithDoorsAndSigns {
+    public Location getSign();
+    public ArrayList<Location> getDoors();
+    public Team getTeam();
+    public MapChunk.Type getType();
 }

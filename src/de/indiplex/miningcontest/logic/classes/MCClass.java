@@ -23,10 +23,29 @@ import org.bukkit.entity.Player;
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Hunter extends MCClass{
+public abstract class MCClass {
+    
+    private Player player;
+    private Type type;
 
-    public Hunter(Player player) {
-        super(player, Type.HUNTER);
+    public MCClass(Player player, Type type) {
+        this.player = player;
+        this.type = type;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Type getType() {
+        return type;
     }
     
+    public enum Type {
+        HUNTER,
+        WIZZARD,
+        CRAFTER,
+        MINER,
+        WARRIOR;
+    }
 }

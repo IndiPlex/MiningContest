@@ -98,6 +98,18 @@ public class MiCoCommands implements CommandExecutor {
                 player.sendMessage("There is no game active at the moment");
             }
         }
+        if (args[0].equals("shop")) {
+            if (mico.started && mico.isMiCoPlayer(player)) {
+                if (mico.isInsideTeamArea(player)) {
+                    mico.getShop().show(player);
+                }
+            }
+        }
+        if (args[0].equals("status")) {
+            if (mico.started && mico.isMiCoPlayer(player)) {
+                mico.printPoints(player);
+            }
+        }
 
         if (op) {
             if (args[0].equalsIgnoreCase("reset")) {
@@ -130,12 +142,7 @@ public class MiCoCommands implements CommandExecutor {
                 mico.start();
             }
             if (args[0].equalsIgnoreCase("stop")) {
-                for (Team t : mico.getTeams()) {
-                    for (Player p : t.getMembers()) {
-                        p.teleport(plugin.getServer().getWorlds().get(0).getSpawnLocation());
-                    }
-                }
-                mico.reset();
+                mico.stop();
             }
         }
 

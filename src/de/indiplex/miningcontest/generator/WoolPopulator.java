@@ -54,9 +54,7 @@ public class WoolPopulator extends BlockPopulator {
                 Block block = source.getBlock(x, y, z);
                 try {
                     block.setData(data[absX][absZ]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    //System.out.println("Error: " + absX + " " + absZ);
-                }
+                } catch (ArrayIndexOutOfBoundsException e) {}
             }
         }
 

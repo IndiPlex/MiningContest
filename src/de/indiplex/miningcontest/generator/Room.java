@@ -51,7 +51,7 @@ public class Room {
             sdata[l.val] = stemp;
             data[l.val] = temp;
         }
-        try {
+        /*try {
             BufferedWriter bw = new BufferedWriter(new FileWriter("trololol"));
             for (int y = 0; y < 11; y++) {
                 bw.write("y:" + y + "\n");
@@ -70,7 +70,7 @@ public class Room {
             bw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
+        }*/
         this.type = type;
     }
 
@@ -230,5 +230,10 @@ public class Room {
             this.sdata = sd;
         }       
         
+    }
+    
+    // JUST DEBUGING!!!
+    public void setdata(int data, int x, int y, int z) {
+        this.data[y][x][z] = data;
     }
 }

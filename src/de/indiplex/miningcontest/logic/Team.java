@@ -18,6 +18,8 @@
 package de.indiplex.miningcontest.logic;
 
 import de.indiplex.miningcontest.generator.Base;
+import de.indiplex.miningcontest.logic.classes.MCClass;
+import de.indiplex.miningcontest.logic.classes.Miner;
 import de.indiplex.miningcontest.map.ColorMap;
 import de.indiplex.miningcontest.map.Map;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class Team {
     private ArrayList<Player> members;
     private long teamPoints;
     private HashMap<Player, Long> points;
+    private HashMap<Player, MCClass> classes;
     private Base base;
     private MiCo mico;
 
@@ -42,6 +45,7 @@ public class Team {
         this.number = number;
         members = new ArrayList<Player>();
         points = new HashMap<Player, Long>();
+        classes = new HashMap<Player, MCClass>();
         this.mico = mico;
     }
 
@@ -83,6 +87,7 @@ public class Team {
         Map map = mico.getMap();
         sendMap(player, (short) 0, ColorMap.imageToBytes(map.getImage()));
         points.put(player, 0L);
+        classes.put(player, new Miner(player));
         return true;
     }
     
@@ -129,11 +134,29 @@ public class Team {
 
     public Base getBase() {
         return base;
-    }    
+    }
+    
+    public MCClass getClass(Player p) {
+        return classes.get(p);
+    }
     
     public void sendMessage(String msg) {
         for (Player p:members) {
             p.sendMessage(msg);
         }
     }
+    
+    public int buy(Material toBuy, int amount, Player player) {
+        int price = ShopContents.getPrice(toBuy) * amount;
+        if (price==0) {
+            return 0;
+        }
+        long ps = points.get(player);
+        if (ps-price<0) {
+            return -1;
+        }
+        points.put(player, ps-price);
+        return price;
+    }
+    
 }
