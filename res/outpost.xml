@@ -45,6 +45,12 @@
 			<y>15</y>
 			<id>ENCHANTMENT_TABLE</id>
 		</point>
+        <point>
+			<x>10</x>
+			<y>15</y>
+			<id>SIGN_POST</id>
+            <data>8</data>
+		</point>
 	</layer>
 	<layer>
         <val>11</val>

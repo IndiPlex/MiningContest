@@ -18,6 +18,7 @@
 package de.indiplex.miningcontest.map;
 
 import de.indiplex.miningcontest.generator.Base;
+import de.indiplex.miningcontest.generator.Lobby;
 import de.indiplex.miningcontest.generator.Outpost;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -76,6 +77,8 @@ public class MapParser {
                         mc = new Outpost(mc.getPos(), data, mc.getRoom(), MapChunk.Type.OUTPOST);
                     } else if (mc.getType().equals(MapChunk.Type.BASE)) {
                         mc = new Base(mc.getPos(), data, mc.getRoom(), MapChunk.Type.BASE);
+                    } else if (mc.getType().equals(MapChunk.Type.LOBBY)) {
+                        mc = new Lobby(mc.getPos(), data, mc.getRoom(), MapChunk.Type.LOBBY);
                     }
                     chunks[x][y] = mc;
                 }

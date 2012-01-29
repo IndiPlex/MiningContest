@@ -20,6 +20,7 @@ package de.indiplex.miningcontest.logic;
 import de.indiplex.manager.IPMAPI;
 import de.indiplex.miningcontest.MiningContest;
 import de.indiplex.miningcontest.generator.Base;
+import de.indiplex.miningcontest.generator.Lobby;
 import de.indiplex.miningcontest.generator.Outpost;
 import de.indiplex.miningcontest.logic.classes.MCClass;
 import de.indiplex.miningcontest.map.Map;
@@ -48,7 +49,7 @@ public class MiCo {
     private Random r = new Random(System.currentTimeMillis());
     private Map map;
     private IPMAPI api;
-    private MapChunk lobby;
+    private Lobby lobby;
     private ArrayList<WithDoorsAndSigns> checkedChunks = new ArrayList<WithDoorsAndSigns>();
     private ArrayList<Outpost> outposts = new ArrayList<Outpost>();
     public long elapsedTime;
@@ -78,7 +79,7 @@ public class MiCo {
                 teams.add(team);
                 checkedChunks.add((WithDoorsAndSigns) mc);
             } else if (mc.getType().equals(MapChunk.Type.LOBBY)) {
-                lobby = mc;
+                lobby = (Lobby) mc;
             } else if (mc.getType().equals(MapChunk.Type.OUTPOST)) {
                 checkedChunks.add((WithDoorsAndSigns) mc);
                 outposts.add((Outpost) mc);
@@ -106,7 +107,6 @@ public class MiCo {
         VCAPI vc = (VCAPI) MiningContest.getAPI().getAPI("vc");
         for (Team t : teams) {
             for (Player p : t.getMembers()) {
-                p.sendMessage("You got " + t.getPoints(p));
                 World w = Bukkit.getWorlds().get(0);
                 p.teleport(w.getSpawnLocation());
                 
@@ -128,11 +128,23 @@ public class MiCo {
         if (gameThread != null) {
             gameThread.setRunning(false);
         }
+        if (startThread != null) {
+            startThread.setRunning(false);
+        }
     }
 
     public void init(int startTime, Integer[] intervals) {
         startThread = new StartThread(startTime, intervals, this);
         new Thread(startThread).start();
+    }
+    
+    public void end() {
+        for (Team t:teams) {
+            for (Player p:t.getMembers()) {
+                p.sendMessage("You got " + t.getPoints(p)+" points!");
+            }
+        }
+        stop();
     }
 
     public void start() {
@@ -156,8 +168,8 @@ public class MiCo {
         started = true;
     }
 
-    public Point getBase(int team) {
-        return teams.get(team).getBase().getPos();
+    public Base getBase(int team) {
+        return teams.get(team).getBase();
     }
 
     public int getTeamCount() {
@@ -210,7 +222,7 @@ public class MiCo {
         return false;
     }
 
-    public MapChunk getLobby() {
+    public Lobby getLobby() {
         return lobby;
     }
 

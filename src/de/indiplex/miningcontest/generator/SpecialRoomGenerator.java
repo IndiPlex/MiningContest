@@ -18,15 +18,19 @@
 package de.indiplex.miningcontest.generator;
 
 import de.indiplex.miningcontest.logic.MiCo;
+import de.indiplex.miningcontest.logic.classes.MCClass;
 import de.indiplex.miningcontest.map.Map;
 import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.map.MapChunk.Type;
+import java.util.ArrayList;
 import java.util.Random;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.generator.BlockPopulator;
 
@@ -38,10 +42,14 @@ public class SpecialRoomGenerator extends BlockPopulator {
 
     private MiCo mico;
     private Map map;
+    private MCClass.Type[] types;
+    private int ct;
 
     public SpecialRoomGenerator(MiCo mico) {
         this.mico = mico;
         map = mico.getMap();
+        types = MCClass.Type.values();
+        ct = 0;
     }
 
     @Override
@@ -105,6 +113,21 @@ public class SpecialRoomGenerator extends BlockPopulator {
                                 }
                             } else {
                                 b.setData(sdata);
+                            }
+                        }
+                        if (mapChunk.getType()==MapChunk.Type.LOBBY) {
+                            ArrayList<Location> signs = ((Lobby) mapChunk).getSigns();
+                            for (Location loc : signs) {
+                                if (loc.getWorld()==null) {
+                                    loc.setWorld(world);
+                                }
+                            }
+                            if (signs.contains(b.getLocation())) {
+                                Sign s = (Sign) b.getState();
+                                if (ct<types.length) {
+                                    s.setLine(1, types[ct].toString());
+                                    ct++;
+                                }
                             }
                         }
                     }

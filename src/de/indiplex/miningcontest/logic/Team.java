@@ -140,6 +140,10 @@ public class Team {
         return classes.get(p);
     }
     
+    public void setClass(Player p, MCClass.Type t) {
+        classes.put(p, MCClass.createByType(p, t));
+    }
+    
     public void sendMessage(String msg) {
         for (Player p:members) {
             p.sendMessage(msg);

@@ -32,4 +32,44 @@
 			<id>BEDROCK</id>
 		</row>
 	</layer>
+    
+    <layer>
+        <val>2</val>
+        <point>
+			<x>3</x>
+			<y>15</y>
+			<id>SIGN_POST</id>
+            <data>8</data>
+		</point>
+        <point>
+			<x>5</x>
+			<y>15</y>
+			<id>SIGN_POST</id>
+            <data>8</data>
+		</point>
+        <point>
+			<x>7</x>
+			<y>15</y>
+			<id>SIGN_POST</id>
+            <data>8</data>
+		</point>
+        <point>
+			<x>9</x>
+			<y>15</y>
+			<id>SIGN_POST</id>
+            <data>8</data>
+		</point>
+        <point>
+			<x>11</x>
+			<y>15</y>
+			<id>SIGN_POST</id>
+            <data>8</data>
+		</point>
+        <point>
+			<x>13</x>
+			<y>15</y>
+			<id>SIGN_POST</id>
+            <data>8</data>
+		</point>
+    </layer>
 </room>

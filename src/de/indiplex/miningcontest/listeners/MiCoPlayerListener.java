@@ -21,7 +21,6 @@ import de.indiplex.miningcontest.logic.MiCo;
 import de.indiplex.miningcontest.logic.PointTable;
 import de.indiplex.miningcontest.logic.Team;
 import de.indiplex.miningcontest.logic.WithDoorsAndSigns;
-import de.indiplex.miningcontest.logic.classes.MCClass;
 import de.indiplex.miningcontest.logic.classes.MCClass.Type;
 import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.util.Door;
@@ -29,6 +28,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -68,9 +68,29 @@ public class MiCoPlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority= EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Block b = event.getClickedBlock();
+        if (b != null && event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && mico.initializing) {
+            if (mico.getLobby().isInside(event.getPlayer().getLocation())) {
+                if (mico.getLobby().getSigns().contains(b.getLocation())) {
+                    Type ct = mico.getClass(event.getPlayer()).getType();
+                    Team t = mico.getTeam(event.getPlayer());
+                    Sign s = (Sign) b.getState();
+                    String str = s.getLine(1);
+                    Type nt = null;
+                    try {
+                        nt = Type.valueOf(str);
+                    } catch(IllegalArgumentException e) {
+                        return;
+                    }
+                    if (nt != null && nt != ct) {
+                        t.setClass(event.getPlayer(), nt);
+                        event.getPlayer().sendMessage("You are now a " + nt);
+                    }
+                }
+            }
+        }
         if (b == null || !b.getWorld().getName().equalsIgnoreCase("ContestWorld") || !mico.started || !mico.isMiCoPlayer(event.getPlayer())) {
             return;
         }
@@ -78,27 +98,34 @@ public class MiCoPlayerListener implements Listener {
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             switch (b.getType()) {
                 case WORKBENCH:
-                    if (ct!=Type.CRAFTER) {
+                    if (ct != Type.CRAFTER) {
                         event.setCancelled(true);
                         return;
                     }
                     break;
                 case FURNACE:
-                    if (ct!=Type.MINER) {
+                    if (ct != Type.MINER) {
                         event.setCancelled(true);
                         return;
                     }
                     break;
                 case BREWING_STAND:
-                    if (ct!=Type.WIZZARD) {
+                    if (ct != Type.WIZZARD) {
                         event.setCancelled(true);
                         return;
                     }
                     break;
                 case ENCHANTMENT_TABLE:
-                    if (ct!=Type.WIZZARD) {
+                    if (ct != Type.WIZZARD) {
                         event.setCancelled(true);
                         return;
+                    }
+                    break;
+                case SIGN:
+                case SIGN_POST:
+                    Team t = mico.getTeam(event.getPlayer());
+                    if (mico.getBase(t.getNumber()).getSign().equals(b.getLocation())) {
+                        mico.getShop().show(event.getPlayer());
                     }
                     break;
             }

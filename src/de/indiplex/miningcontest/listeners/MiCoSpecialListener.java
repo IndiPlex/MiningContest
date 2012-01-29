@@ -46,11 +46,12 @@ public class MiCoSpecialListener implements Listener {
         if (t==null) {
             return;
         }
-        String id = "Team" + t.getNumber() + " " + t.getClass(e.getPlayer()).getType().toString()+" shop";
+        String id = "T" + t.getNumber() + " " + t.getClass(e.getPlayer()).getType().toString()+" shop";
         if (e.getClicked()<54 && e.getInventory().getName().equalsIgnoreCase(id)) {
             int res = t.buy(e.getItemStack().getType(), e.getItemStack().getAmount(), e.getPlayer());
             if (res==-1) {
                 e.getPlayer().sendMessage("You don't have enough points!");
+                e.setCancelled(true);
             } else if (res>0) {
                 ItemStack is = e.getItemStack();
                 e.getPlayer().sendRawMessage("You bougth "+is.getAmount()+" "+is.getType().toString().toLowerCase()+" and paid "+res+" points!");
