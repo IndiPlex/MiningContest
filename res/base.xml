@@ -58,6 +58,12 @@
 			<id>IRON_DOOR_BLOCK</id>
 			<data>3</data>
 		</point>
+        <point>
+			<x>10</x>
+			<y>15</y>
+			<id>SIGN_POST</id>
+            <data>8</data>
+		</point>
 	</layer>
 	
 	<layer>

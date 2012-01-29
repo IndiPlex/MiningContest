@@ -22,6 +22,7 @@ import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.util.Door;
 import java.util.HashMap;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -65,10 +66,10 @@ public class GameThread implements Runnable {
     public void run() {
         mico.startingTime = (lastCheck = (lastMessage = System.currentTimeMillis()));
         long baseChecked = lastCheck;
-        long signCheck = lastCheck;
+        long signCheck = 0;
         while (running) {
             currTime = System.currentTimeMillis();
-            mico.elapsedTime = mico.startingTime - currTime;
+            mico.elapsedTime = currTime - mico.startingTime;
             if (currTime - lastMessage >= 60000) {
                 mico.printPoints();
                 mico.getShop().refill();
@@ -84,6 +85,10 @@ public class GameThread implements Runnable {
                         }
                     }
                 }
+                boolean checkSigns = currTime - signCheck >= 2500;
+                if (checkSigns) {
+                    signCheck = System.currentTimeMillis();
+                }
                 for (WithDoorsAndSigns t : mico.getCheckedChunks()) {
                     for (Location loc : t.getDoors()) {
                         if (loc.getWorld() == null) {
@@ -98,10 +103,9 @@ public class GameThread implements Runnable {
                             }
                         }
                     }
-                    // TODO: Write the code to update signs
-                    if (currTime - signCheck >= 900) {
+                    if (checkSigns) {
                         Location loc = t.getSign();
-                        if (loc==null) {
+                        if (loc == null) {
                             continue;
                         }
                         if (loc.getWorld() == null) {
@@ -110,24 +114,32 @@ public class GameThread implements Runnable {
                         Block b = Bukkit.getWorld("ContestWorld").getBlockAt(loc);
                         if (b.getState() instanceof Sign) {
                             Sign s = (Sign) b.getState();
-                            if (t.getTeam()!=null){
-                                s.setLine(0, "Team "+t.getTeam().getNumber());
+                            if (t.getTeam() != null) {
+                                s.setLine(0, "Team " + t.getTeam().getNumber());
                                 s.setLine(1, "Points:");
-                                s.setLine(2, ""+t.getTeam().getTeamPoints());
-                                s.setLine(3, ""+Math.round((duration-mico.elapsedTime)/1000));
+                                s.setLine(2, "" + t.getTeam().getTeamPoints());
+                                s.setLine(3, "" + Math.round((duration - mico.elapsedTime) / 1000));
                             } else if (t.getType().equals(MapChunk.Type.OUTPOST)) {
                                 int i = 0;
                                 Outpost outp = (Outpost) t;
-                                for (Team te:outp.getConStateKeys()) {
-                                    if (i==4) break;
-                                    StringBuilder str = new StringBuilder("T"+te.getNumber()+":");                                    
-                                    for (int j=0;j<Math.round(outp.getConState(te)/10000*13);j++) {
-                                        str = str.append(">");
+                                for (Team te : outp.getConStateKeys()) {
+                                    if (i == 4) {
+                                        break;
                                     }
-                                    str.setLength(15);
+                                    String pre = "§"+ChatColor.values()[i+1].getChar();
+                                    StringBuilder str = new StringBuilder(pre+"T" + te.getNumber() + ":");
+                                    System.out.println(outp.getConState(te)+" "+(outp.getConState(te)*13/100));
+                                    for (int j = 0; j < Math.round(outp.getConState(te)*13/100); j++) {
+                                        str = str.append("-");
+                                    }
+                                    System.out.println(str.toString());
                                     s.setLine(i, str.toString());
+                                    i++;
                                 }
                             }
+                            s.update();
+                        } else {
+                            System.out.println("Error!");
                         }
                     }
                 }
@@ -146,6 +158,7 @@ public class GameThread implements Runnable {
                 baseChecked = currTime;
             }
             if (mico.elapsedTime >= duration) {
+                mico.end();
             }
         }
         running = false;

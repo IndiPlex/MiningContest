@@ -47,7 +47,11 @@ public class CavePopulator extends BlockPopulator {
         ArrayList<Point> bases = new ArrayList<Point>();
         
         for (int i=0;i<mico.getTeamCount();i++) {
-            Point p = mico.getBase(i);
+            Base b = mico.getBase(i);
+            if (b==null) {
+                return;
+            }
+            Point p = b.getPos();
             if (p==null) {
                 return;
             }

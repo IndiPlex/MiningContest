@@ -65,6 +65,9 @@ public class MiningContest extends IPMPlugin {
                 JarEntry e = entries.nextElement();
                 if (e.toString().contains("res") && !e.isDirectory()) {
                     File f = new File(dataFolder, e.getName());
+                    if (f.exists()) {
+                        continue;
+                    }
                     f.getParentFile().mkdirs();
                     copy(file.getInputStream(e), f);
                 }

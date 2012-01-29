@@ -137,6 +137,7 @@ public class MiCoCommands implements CommandExecutor {
                 }
             }
             if (args[0].equalsIgnoreCase("qs")) {
+                plugin.getMWAPI().resetWorld(plugin.contestWorld, 10);
                 mico.initializing = true;
                 mico.getNextTeam().addMember(player);
                 mico.start();

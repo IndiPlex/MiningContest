@@ -41,6 +41,21 @@ public abstract class MCClass {
         return type;
     }
     
+    public static MCClass createByType(Player p, Type t) {
+        switch(t) {
+            case HUNTER:
+                return new Hunter(p);
+            case CRAFTER:
+                return new Crafter(p);
+            case WARRIOR:
+                return new Warrior(p);
+            case WIZZARD:
+                return new Wizzard(p);
+            default:
+                return new Miner(p);
+        }
+    }
+    
     public enum Type {
         HUNTER,
         WIZZARD,

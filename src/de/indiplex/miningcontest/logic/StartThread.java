@@ -29,6 +29,7 @@ public class StartThread implements Runnable {
     private Integer[] intervals;
     private MiCo mico;
     public boolean startNOW = false;
+    private boolean running = true;
 
     public StartThread(MiCo mico) {
         this(10, new Integer[]{0, 5, 8, 9}, mico);
@@ -40,6 +41,10 @@ public class StartThread implements Runnable {
         this.mico = mico;
     }
 
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
     @Override
     public void run() {
         mico.initializing = true;
@@ -48,7 +53,7 @@ public class StartThread implements Runnable {
         int cInterv = 0;
         int interv = intervals[cInterv];
         boolean printIt = true;
-        while (true) {
+        while (running) {
             currentTime = System.currentTimeMillis();
             if (currentTime - sTime > interv * 60 * 1000 && printIt) {
                 cInterv++;

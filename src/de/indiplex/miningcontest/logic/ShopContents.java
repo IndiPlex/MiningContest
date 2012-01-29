@@ -35,6 +35,7 @@ public class ShopContents {
     private static final Map<Material, Integer> prices = new EnumMap<Material, Integer>(Material.class);
     
     static {
+        //STANDARD
         ItemStack[] inv = new ItemStack[5];
         inv[0] = new ItemStack(Material.PORK, 4);
         inv[1] = new ItemStack(Material.PORK, 10);
@@ -43,6 +44,7 @@ public class ShopContents {
         inv[4] = new ItemStack(Material.STONE_SWORD, 2);
         standardInv = inv;
         
+        //MINER
         inv = new ItemStack[4];
         inv[0] = new ItemStack(Material.DIAMOND_PICKAXE, 2);
         inv[1] = new ItemStack(Material.IRON_PICKAXE, 2);
@@ -50,6 +52,7 @@ public class ShopContents {
         inv[3] = new ItemStack(Material.TNT, 10);
         standardInvs.put(MCClass.Type.MINER, inv);
         
+        //CRAFTER
         inv = new ItemStack[5];
         inv[0] = new ItemStack(Material.WOOD, 32);
         inv[1] = new ItemStack(Material.WOOD, 32);
@@ -58,6 +61,7 @@ public class ShopContents {
         inv[4] = new ItemStack(Material.WORKBENCH, 2);
         standardInvs.put(MCClass.Type.CRAFTER, inv);
         
+        //HUNTER
         inv = new ItemStack[18];
         inv[0] = new ItemStack(Material.ARROW, 32);
         inv[1] = new ItemStack(Material.ARROW, 32);
@@ -79,6 +83,7 @@ public class ShopContents {
         inv[17] = new ItemStack(Material.COOKED_CHICKEN, 10);
         standardInvs.put(MCClass.Type.HUNTER, inv);
         
+        //WIZZARD
         inv = new ItemStack[8];
         inv[0] = new ItemStack(Material.BREWING_STAND_ITEM, 2);
         inv[1] = new ItemStack(Material.BREWING_STAND_ITEM, 2);
@@ -90,6 +95,7 @@ public class ShopContents {
         inv[7] = new ItemStack(Material.NETHER_WARTS, 10);
         standardInvs.put(MCClass.Type.WIZZARD, inv);
         
+        //WARRIOR
         inv = new ItemStack[22];
         inv[0] = new ItemStack(Material.COOKED_BEEF, 20);
         inv[1] = new ItemStack(Material.DIAMOND_SWORD, 2);
@@ -115,6 +121,7 @@ public class ShopContents {
         inv[21] = new ItemStack(Material.COOKED_FISH, 10);
         standardInvs.put(MCClass.Type.WARRIOR, inv);
         
+        //PRICES
         prices.put(Material.PORK, 20);
         prices.put(Material.STONE_PICKAXE, 30);
         prices.put(Material.STONE_SWORD, 35);

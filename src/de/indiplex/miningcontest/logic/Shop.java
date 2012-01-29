@@ -21,6 +21,7 @@ import de.indiplex.miningcontest.MiningContest;
 import de.indiplex.miningcontest.logic.classes.MCClass;
 import de.indiplex.virtualchests.VCAPI;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -47,7 +48,7 @@ public class Shop {
     private void fill(boolean refill) {
         for (MCClass.Type type : MCClass.Type.values()) {
             for (Team t : mico.getTeams()) {
-                String id = "Team" + t.getNumber() + " " + type.toString()+" shop";
+                String id = "T" + t.getNumber() + " " + type.toString()+" shop";
                 if (!refill) {
                     if (vc.hasChest(id)) {
                         vc.removeChest(id);
@@ -63,7 +64,7 @@ public class Shop {
 
     public void show(Player player) {
         Team t = mico.getTeam(player);
-        String id = "Team" + t.getNumber() + " " + t.getClass(player).getType().toString()+" shop";
+        String id = "T" + t.getNumber() + " " + t.getClass(player).getType().toString()+" shop";
         vc.showChest(player, id);
     }
 }

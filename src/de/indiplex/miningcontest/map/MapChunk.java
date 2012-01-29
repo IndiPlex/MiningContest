@@ -84,6 +84,10 @@ public class MapChunk {
         
         return (ax >= 0 && ax <= 15) && (az >= 0 && az <= 15) && (y >= room.getStart() && y < room.getStart() + room.getHeigth());
     }
+    
+    public boolean isInside(Location loc) {
+        return loc.getWorld()!=null && loc.getWorld().getName().equalsIgnoreCase("ContestWorld") && isInside(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
 
     public Chunk getChunk() {
         return Bukkit.getWorld("ContestWorld").getChunkAt(pos.x, pos.y);
