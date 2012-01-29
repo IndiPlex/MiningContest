@@ -60,9 +60,9 @@ public class Team {
     }
         
     private void sendRawData(Player player, short mapId, byte[] data) {
-        /*net.minecraft.server.Packet packet = new net.minecraft.server.Packet131ItemData((short) Material.MAP.getId(), mapId, data);
-        org.bukkit.entity.EntityPlayer entity = ((org.bukkit.craftbukkit.entity.CraftPlayer) player).getHandle();
-        entity.netServerHandler.sendPacket(packet);*/
+        net.minecraft.server.Packet packet = new net.minecraft.server.Packet131ItemData((short) Material.MAP.getId(), mapId, data);
+        net.minecraft.server.EntityPlayer entity = ((org.bukkit.craftbukkit.entity.CraftPlayer) player).getHandle();
+        entity.netServerHandler.sendPacket(packet);
         return;
     }
     
