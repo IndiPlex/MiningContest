@@ -18,9 +18,6 @@
 package de.indiplex.miningcontest.generator;
 
 import de.indiplex.miningcontest.map.MapChunk;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**

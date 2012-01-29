@@ -84,7 +84,6 @@ public class MiCo {
                 outposts.add((Outpost) mc);
             }
         }
-        System.out.println(outposts.size());
     }
 
     public Shop getShop() {

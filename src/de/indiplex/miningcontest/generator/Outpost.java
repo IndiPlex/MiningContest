@@ -90,7 +90,6 @@ public class Outpost extends MapChunk implements WithDoorsAndSigns {
         if (conState.get(t) >= 100) {
             return;
         }
-        System.out.println("lololol");
         for (Team te : conState.keySet()) {
             if (te != t) {
                 int n = conState.get(te) - 5;
