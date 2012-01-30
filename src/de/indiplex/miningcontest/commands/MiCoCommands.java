@@ -110,6 +110,16 @@ public class MiCoCommands implements CommandExecutor {
                 mico.printPoints(player);
             }
         }
+        if (args[0].equals("info")) {
+            if (mico.started && mico.isMiCoPlayer(player)) {
+                for (Team t:mico.getTeams()) {
+                    player.sendMessage("Team"+t.getNumber()+":");
+                    for (Player p:t.getMembers()) {
+                        player.sendMessage(p.getName());
+                    }
+                }
+            }
+        }
 
         if (op) {
             if (args[0].equalsIgnoreCase("reset")) {

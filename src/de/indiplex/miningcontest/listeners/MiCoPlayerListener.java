@@ -144,7 +144,6 @@ public class MiCoPlayerListener implements Listener {
                 }
                 mico.gameThread.setDoor(b.getLocation());
                 Door.toogleDoor(b);
-
             }
         }
     }

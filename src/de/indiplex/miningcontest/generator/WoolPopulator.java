@@ -17,6 +17,8 @@
  */
 package de.indiplex.miningcontest.generator;
 
+import de.indiplex.miningcontest.logic.MiCo;
+import de.indiplex.miningcontest.map.Map;
 import java.util.Random;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -29,19 +31,24 @@ import org.bukkit.generator.BlockPopulator;
  */
 public class WoolPopulator extends BlockPopulator {
 
-    private byte[][] data;
+    private MiCo mico;
 
     /**
      * Places the wool at the top layer of the MiningContestWorld
-     * @param data WoolColor data-array
+     * @param mico The MiningContest
      */
-    public WoolPopulator(byte[][] data) {
-        this.data = data;
+    public WoolPopulator(MiCo mico) {
+        this.mico = mico;
     }
 
     @Override
     public void populate(World world, Random random, Chunk source) {
         int y = 126;
+        Map map = mico.getMap();
+        if (map==null) {
+            return;
+        }
+        byte[][] data = map.getWool();
         if (data == null) {
             return;
         }

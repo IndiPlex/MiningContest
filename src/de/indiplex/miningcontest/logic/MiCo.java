@@ -31,7 +31,6 @@ import de.indiplex.multiworlds.MultiWorldsAPI;
 import de.indiplex.virtualchests.VCAPI;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -47,7 +46,6 @@ public class MiCo {
     public boolean initializing = false;
     public boolean started = false;
     private int nextTeam = 0;
-    private Random r = new Random(System.currentTimeMillis());
     private Map map;
     private IPMAPI api;
     private Lobby lobby;
@@ -67,13 +65,16 @@ public class MiCo {
      */
     public MiCo() {
         this.elapsedTime = 0;
-        setMap(config.getMapName());
         shop = new Shop(this);
         shop.init();
     }
 
     private void setMap(String mapName) {
+        teams.clear();
         map = MapParser.parseMap(new File(MiningContest.getAPI().getDataFolder(), "res/" + mapName));
+        if (map==null) {
+            return;
+        }
         MapChunk[] mapChunks = map.getMapChunks();
         int t = 0;
         for (MapChunk mc : mapChunks) {
@@ -82,6 +83,7 @@ public class MiCo {
                 team.setBase((Base) mc);
                 ((Base) mc).setTeam(team);
                 teams.add(team);
+                t++;
                 checkedChunks.add((WithDoorsAndSigns) mc);
             } else if (mc.getType().equals(MapChunk.Type.LOBBY)) {
                 lobby = (Lobby) mc;
@@ -124,6 +126,7 @@ public class MiCo {
         this.api = api;
         config.load();
         MiningContest.log.info(MiningContest.pre + "Loaded config");
+        setMap(config.getMapName());
     }
 
     /**
@@ -137,6 +140,7 @@ public class MiCo {
     /**
      * Stops the contest
      */
+    @SuppressWarnings(value="deprecation")
     public void stop() {
         VCAPI vc = (VCAPI) MiningContest.getAPI().getAPI("vc");
         for (Team t : teams) {
@@ -176,7 +180,6 @@ public class MiCo {
      * @param intervals The intervals where it should broadcast
      */
     public void init(int startTime, Integer[] intervals) {
-        setMap(config.getMapName());
         resetWorld();
         initializing = true;
         if (intervals != null) {
@@ -208,6 +211,7 @@ public class MiCo {
     /**
      * Starts the MiCo
      */
+    @SuppressWarnings(value="deprecation")
     public void start() {
         initializing = false;
         Bukkit.getServer().broadcastMessage("The mining-contest starts now!");

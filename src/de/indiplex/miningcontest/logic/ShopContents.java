@@ -149,6 +149,9 @@ public class ShopContents {
      * @param t Class type of the player
      */
     public static void refillInventory(Inventory inv, MiCoClass.Type t) {
+        if (inv==null) {
+            return;
+        }
         inv.clear();
         fillInventory(inv, t);
     }

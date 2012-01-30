@@ -41,7 +41,6 @@ import org.bukkit.generator.BlockPopulator;
 public class SpecialRoomGenerator extends BlockPopulator {
 
     private MiCo mico;
-    private Map map;
     private MiCoClass.Type[] types;
     private int ct;
 
@@ -51,13 +50,16 @@ public class SpecialRoomGenerator extends BlockPopulator {
      */
     public SpecialRoomGenerator(MiCo mico) {
         this.mico = mico;
-        map = mico.getMap();
         types = MiCoClass.Type.values();
         ct = 0;
     }
 
     @Override
     public void populate(World world, Random random, Chunk source) {
+        Map map = mico.getMap();
+        if (map==null) {
+            return;
+        }
         int cx = source.getX() + 10;
         int cz = source.getZ() + 10;
         if (cx < 0 || cx > 20 || cz < 0 || cz > 20) {

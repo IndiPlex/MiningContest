@@ -17,6 +17,7 @@
  */
 package de.indiplex.miningcontest.map;
 
+import de.indiplex.miningcontest.MiningContest;
 import de.indiplex.miningcontest.generator.Base;
 import de.indiplex.miningcontest.generator.Lobby;
 import de.indiplex.miningcontest.generator.Outpost;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
+import org.bukkit.Bukkit;
 
 /**
  *
@@ -51,7 +53,12 @@ public class MapParser {
      * @return Map The fninished map
      */
     public static Map parseMap(File mapFile) {
-        try {            
+        try {
+            if (!mapFile.exists()) {
+                MiningContest.log.severe(MiningContest.pre+"Can't parse map "+mapFile);
+                Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("MiningContest"));
+                return null;
+            }
             BufferedImage image = ImageIO.read(mapFile);
             int width = image.getWidth();
             int height = image.getHeight();
