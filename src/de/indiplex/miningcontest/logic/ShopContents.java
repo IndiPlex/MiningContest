@@ -36,12 +36,16 @@ public class ShopContents {
     
     static {
         //STANDARD
-        ItemStack[] inv = new ItemStack[5];
+        ItemStack[] inv = new ItemStack[9];
         inv[0] = new ItemStack(Material.PORK, 4);
         inv[1] = new ItemStack(Material.PORK, 10);
         inv[2] = new ItemStack(Material.STONE_PICKAXE, 2);
         inv[3] = new ItemStack(Material.STONE_PICKAXE, 2);
         inv[4] = new ItemStack(Material.STONE_SWORD, 2);
+        inv[5] = new ItemStack(Material.TORCH, 16);
+        inv[6] = new ItemStack(Material.TORCH, 32);
+        inv[7] = new ItemStack(Material.TORCH, 32);
+        inv[8] = new ItemStack(Material.TORCH, 64);
         standardInv = inv;
         
         //MINER
