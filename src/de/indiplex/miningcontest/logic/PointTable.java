@@ -39,6 +39,11 @@ public class PointTable {
         points.put(COBBLESTONE, 1);
     }
     
+    /**
+     * Get the points of a specific material
+     * @param mat The material
+     * @return Integer Points of the material
+     */
     public static Integer getPoints(Material mat) {
         return points.get(mat);
     }

@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Crafter extends MCClass {
+public class Crafter extends MiCoClass {
 
     public Crafter(Player player) {
         super(player, Type.CRAFTER);

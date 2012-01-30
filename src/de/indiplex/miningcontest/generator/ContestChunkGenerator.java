@@ -89,8 +89,6 @@ public class ContestChunkGenerator extends MWGenerator {
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
         List<BlockPopulator> pops = new ArrayList<BlockPopulator>();
-        //pops.add(new CavePopulator(mico));
-        //pops.add(new BasePopulator(mico));
         pops.add(new SpecialRoomGenerator(mico));
         pops.add(new WoolPopulator(mico.getMap().getWool()));
         return pops;
@@ -103,6 +101,10 @@ public class ContestChunkGenerator extends MWGenerator {
         return new Location(world, b.getX(), b.getY(), b.getZ());
     }
 
+    /**
+     * 
+     * @return MiCo The current MiningContest
+     */
     public MiCo getMico() {
         return mico;
     }

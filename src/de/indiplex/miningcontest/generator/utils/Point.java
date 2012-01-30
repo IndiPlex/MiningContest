@@ -15,18 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.indiplex.miningcontest.logic.classes;
-
-import org.bukkit.entity.Player;
+package de.indiplex.miningcontest.generator.utils;
 
 /**
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Wizzard extends MiCoClass {
+public class Point {
+    public int x;
+    public int y;
+    public int data;
+    public byte sdata;
 
-    public Wizzard(Player player) {
-        super(player, Type.WIZZARD);
+    public Point(int x, int y, int id, byte sd) {
+        this.x = x;
+        this.y = y;
+        this.data = id;
+        this.sdata = sd;
     }
     
 }

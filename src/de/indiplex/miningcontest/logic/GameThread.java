@@ -35,7 +35,6 @@ import org.bukkit.entity.Player;
 public class GameThread implements Runnable {
 
     private MiCo mico;
-    private final long duration = 15 * 60 * 1000; // 15 Minutes
     private long lastMessage;
     private long lastCheck;
     private long currTime;
@@ -49,15 +48,27 @@ public class GameThread implements Runnable {
         running = true;
     }
 
+    /**
+     * Changes the status of the MiningContest to running/not running
+     * @param running true for running/false for not running
+     */
     public void setRunning(boolean running) {
         this.running = running;
     }
 
+    /**
+     * Sets if the player should receive the dropMessage
+     * @param player The player
+     */
     public void setDrop(Player player) {
         drops.put(player, currTime);
         dropMessage.put(player, true);
     }
 
+    /**
+     * Sets the door to close
+     * @param b The location of the door
+     */
     public void setDoor(Location b) {
         doors.put(b, currTime);
     }
@@ -75,7 +86,7 @@ public class GameThread implements Runnable {
                 mico.getShop().refill();
                 lastMessage = System.currentTimeMillis();
             }
-            if (currTime - lastCheck >= 300) {
+            if (currTime - lastCheck >= mico.getConfig().getMicoTickRate()) {
                 /// Message players who dropped items in the last 10 secs with their points 
                 for (Player p : mico.getPlayers()) {
                     if (dropMessage.get(p) != null && dropMessage.get(p)) {
@@ -85,7 +96,7 @@ public class GameThread implements Runnable {
                         }
                     }
                 }
-                boolean checkSigns = currTime - signCheck >= 2500;
+                boolean checkSigns = currTime - signCheck >= mico.getConfig().getSignRefreshRate();
                 if (checkSigns) {
                     signCheck = System.currentTimeMillis();
                 }
@@ -118,7 +129,7 @@ public class GameThread implements Runnable {
                                 s.setLine(0, "Team " + t.getTeam().getNumber());
                                 s.setLine(1, "Points:");
                                 s.setLine(2, "" + t.getTeam().getTeamPoints());
-                                s.setLine(3, "" + Math.round((duration - mico.elapsedTime) / 1000));
+                                s.setLine(3, "" + Math.round((mico.getConfig().getDuration() - mico.elapsedTime) / 1000));
                             } else if (t.getType().equals(MapChunk.Type.OUTPOST)) {
                                 int i = 0;
                                 Outpost outp = (Outpost) t;
@@ -157,7 +168,7 @@ public class GameThread implements Runnable {
                 }
                 baseChecked = currTime;
             }
-            if (mico.elapsedTime >= duration) {
+            if (mico.elapsedTime >= mico.getConfig().getDuration()) {
                 mico.end();
             }
         }

@@ -18,10 +18,9 @@
 package de.indiplex.miningcontest.logic;
 
 import de.indiplex.miningcontest.MiningContest;
-import de.indiplex.miningcontest.logic.classes.MCClass;
+import de.indiplex.miningcontest.logic.classes.MiCoClass;
 import de.indiplex.virtualchests.VCAPI;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -32,21 +31,31 @@ public class Shop {
     private MiCo mico;
     private VCAPI vc;
 
+    /**
+     * Initializes a new shop
+     * @param mico The MiningContest
+     */
     public Shop(MiCo mico) {
         this.mico = mico;
         vc = (VCAPI) MiningContest.getAPI().getAPI("vc");
     }
 
+    /**
+     * Initializes the shop with clearing the contents before
+     */
     public void init() {
         fill(false);
     }
     
+    /**
+     * Refills the shop
+     */
     public void refill() {
         fill(true);
     }
 
     private void fill(boolean refill) {
-        for (MCClass.Type type : MCClass.Type.values()) {
+        for (MiCoClass.Type type : MiCoClass.Type.values()) {
             for (Team t : mico.getTeams()) {
                 String id = "T" + t.getNumber() + " " + type.toString()+" shop";
                 if (!refill) {
@@ -62,6 +71,10 @@ public class Shop {
         }
     }
 
+    /**
+     * Shows the shop to the player
+     * @param player The player which is supposed to see the shop
+     */
     public void show(Player player) {
         Team t = mico.getTeam(player);
         String id = "T" + t.getNumber() + " " + t.getClass(player).getType().toString()+" shop";

@@ -22,8 +22,6 @@ import de.indiplex.miningcontest.map.MapChunk;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.EnumMap;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -39,6 +37,9 @@ public class RoomParser {
     private static RoomParser instance;
     private EnumMap<MapChunk.Type, Room> rooms = new EnumMap<MapChunk.Type, Room>(MapChunk.Type.class);
 
+    /**
+     * Initializes a new RoomParser
+     */
     private RoomParser() {
     }
 
@@ -49,20 +50,11 @@ public class RoomParser {
         return instance;
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        Process exec = Runtime.getRuntime().exec(new String[] {"C:/Program Files (x86)/Git/bin/git", "clone", "lolol"});
-        copy(exec.getInputStream(), System.out);
-        copy(exec.getErrorStream(), System.err);
-        System.out.println(exec.waitFor());
-    }
-    private static void copy(InputStream in, OutputStream out) throws IOException {
-        int i = in.read();
-        while (i!=-1) {
-            out.write(i);
-            i = in.read();
-        }
-    }
-
+    /**
+     * Parses the room file xml
+     * @param type MapChunk.Type of the element to parse
+     * @return Room The finished room
+     */
     public static Room parseRoom(MapChunk.Type type) {
         try {
             RoomParser rp = getInstance();

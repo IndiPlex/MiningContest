@@ -31,6 +31,13 @@ public class Lobby extends MapChunk {
     
     private ArrayList<Location> signs = new ArrayList<Location>();
     
+    /**
+     * Initializes a new Lobby
+     * @param pos Position of the Lobby
+     * @param data Color data of the MapParser
+     * @param room The room data
+     * @param type Type of the room (should be Lobby)
+     */
     public Lobby(Point pos, int[][] data, Room room, Type type) {
         super();
         this.pos = pos;
@@ -39,7 +46,7 @@ public class Lobby extends MapChunk {
         this.type = type;
         
         for (int x=0;x<16;x++) {
-            for (int y=0;y<room.getHeigth();y++) {
+            for (int y=0;y<room.getHeight();y++) {
                 for (int z=0;z<16;z++) {
                     if (room.getData(x, y, z)==Material.SIGN.getId() || room.getData(x, y, z)==Material.SIGN_POST.getId()) {
                         Location loc = new Location(null, pos.x*16+x, room.getStart()+y, pos.y*16+z);
@@ -50,6 +57,10 @@ public class Lobby extends MapChunk {
         }
     }
 
+    /**
+     * 
+     * @return ArrayList<Location> The location of the signs in the Lobby
+     */
     public ArrayList<Location> getSigns() {
         return signs;
     }

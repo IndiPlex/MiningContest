@@ -18,7 +18,7 @@
 package de.indiplex.miningcontest.generator;
 
 import de.indiplex.miningcontest.logic.MiCo;
-import de.indiplex.miningcontest.logic.classes.MCClass;
+import de.indiplex.miningcontest.logic.classes.MiCoClass;
 import de.indiplex.miningcontest.map.Map;
 import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.map.MapChunk.Type;
@@ -42,13 +42,17 @@ public class SpecialRoomGenerator extends BlockPopulator {
 
     private MiCo mico;
     private Map map;
-    private MCClass.Type[] types;
+    private MiCoClass.Type[] types;
     private int ct;
 
+    /**
+     * All rooms that are not full or paths
+     * @param mico The MiningContest
+     */
     public SpecialRoomGenerator(MiCo mico) {
         this.mico = mico;
         map = mico.getMap();
-        types = MCClass.Type.values();
+        types = MiCoClass.Type.values();
         ct = 0;
     }
 
@@ -86,7 +90,7 @@ public class SpecialRoomGenerator extends BlockPopulator {
             Room room = mapChunk.getRoom();
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
-                    for (int y = room.getStart(); y < room.getHeigth() + room.getStart(); y++) {
+                    for (int y = room.getStart(); y < room.getHeight() + room.getStart(); y++) {
                         int data = room.getData(x, y - room.getStart(), z);
                         byte sdata = room.getSpecialData(x, y - room.getStart(), z);
                         Block b = source.getBlock(x, y, z);

@@ -21,7 +21,7 @@ import de.indiplex.miningcontest.logic.MiCo;
 import de.indiplex.miningcontest.logic.PointTable;
 import de.indiplex.miningcontest.logic.Team;
 import de.indiplex.miningcontest.logic.WithDoorsAndSigns;
-import de.indiplex.miningcontest.logic.classes.MCClass.Type;
+import de.indiplex.miningcontest.logic.classes.MiCoClass.Type;
 import de.indiplex.miningcontest.map.MapChunk;
 import de.indiplex.miningcontest.util.Door;
 import org.bukkit.ChatColor;

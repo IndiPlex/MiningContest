@@ -43,7 +43,7 @@ public class Base extends MapChunk implements WithDoorsAndSigns {
         this.type = type;
         
         for (int x=0;x<16;x++) {
-            for (int y=0;y<room.getHeigth();y++) {
+            for (int y=0;y<room.getHeight();y++) {
                 for (int z=0;z<16;z++) {
                     if (room.getData(x, y, z)==Material.IRON_DOOR_BLOCK.getId()) {
                         Location loc = new Location(null, pos.x*16+x, room.getStart()+y, pos.y*16+z);
@@ -57,6 +57,10 @@ public class Base extends MapChunk implements WithDoorsAndSigns {
         }
     }
 
+    /**
+     * Sets the team which the base belongs to
+     * @param team The team to set
+     */
     public void setTeam(Team team) {
         this.team = team;
     }
