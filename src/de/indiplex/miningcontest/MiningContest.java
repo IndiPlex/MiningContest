@@ -45,23 +45,29 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
  * @author IndiPlex <Cartan12@indiplex.de>
  */
 public class MiningContest extends IPMPlugin {
-    
+
     public World contestWorld;
     private MultiWorldsAPI MAPI;
     public static final String pre = "[MICO] ";
     private HashMap<String, Location> oldPosition = new HashMap<String, Location>();
     private static MiCo mc;
+    private static IPMAPI API;
 
     @Override
-    public void onIPMLoad() {                
+    protected void init(IPMAPI API) {
+        MiningContest.API = API;
+    }
+
+    @Override
+    public void onIPMLoad() {
         try {
-            String s = getClass().getResource("").getPath().split("\\!")[0];            
-            s = "plugins"+s.split("plugins")[1]+"plugins"+s.split("plugins")[2];
+            String s = getClass().getResource("").getPath().split("\\!")[0];
+            s = "plugins" + s.split("plugins")[1] + "plugins" + s.split("plugins")[2];
             s = s.replace("%20", " ");
             JarFile file = new JarFile(s);
             Enumeration<JarEntry> entries = file.entries();
             File dataFolder = getAPI().getDataFolder();
-            while(entries.hasMoreElements()) {
+            while (entries.hasMoreElements()) {
                 JarEntry e = entries.nextElement();
                 if (e.toString().contains("res") && !e.isDirectory()) {
                     File f = new File(dataFolder, e.getName());
@@ -72,7 +78,7 @@ public class MiningContest extends IPMPlugin {
                     copy(file.getInputStream(e), f);
                 }
             }
-            
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -93,9 +99,11 @@ public class MiningContest extends IPMPlugin {
         log.info(pre + "Hooked into MultiWorlds...");
         MAPI.setGenerator("contest", ContestChunkGenerator.class);
         contestWorld = MAPI.registerWorld("ContestWorld", "contest", World.Environment.NORMAL, true);
+
+        mc = ((ContestChunkGenerator) MAPI.getGenByWorld("ContestWorld")).getMico();
         
-        mc = ((ContestChunkGenerator) MAPI.getGenByWorld("ContestWorld")).getMico();                
-        
+        mc.setApi(API);
+
         log.info(pre + "Registered World!");
         log.info(pre + "Configuring world...");
         //contestWorld.setSpawnFlags(false, true);
@@ -104,7 +112,7 @@ public class MiningContest extends IPMPlugin {
         Listener bListener = new MiCoBlockListener(mc);
         Listener pListener = new MiCoPlayerListener(mc);
         Listener sListener = new MiCoSpecialListener(mc);
-        
+
         Listener eListener = new Listener() {
 
             @EventHandler
@@ -113,22 +121,30 @@ public class MiningContest extends IPMPlugin {
                     event.setCancelled(true);
                 }
             }
-            
         };
-        
+
         getServer().getPluginManager().registerEvents(bListener, this);
         getServer().getPluginManager().registerEvents(pListener, this);
         getServer().getPluginManager().registerEvents(eListener, this);
         getServer().getPluginManager().registerEvents(sListener, this);
-        
+
         printEnabled(pre);
     }
 
+    /**
+     * Returns the current MiningContest
+     *  @return MiCo The current MiningContest
+     */
     public static MiCo getCurrentContest() {
         return mc;
     }
 
-    public boolean del(File dir) {
+    /**
+     * 
+     * @param dir directory or file to delete
+     * @return boolean true if successfull, false if not
+     */
+    private boolean del(File dir) {
         if (dir.isDirectory()) {
             File[] files = dir.listFiles();
             for (File aktFile : files) {
@@ -138,45 +154,64 @@ public class MiningContest extends IPMPlugin {
         return dir.delete();
     }
 
+    /**
+     * Returns the world, where the MiningContest is working in.
+     * @return World ContestWorld
+     */
     public World getContestWorld() {
         return contestWorld;
     }
-    
+
+    /**
+     * 
+     * @param playerName Name of the player to look for the old coords
+     * @return Location The location of the player before he joins the MiningContest
+     */
     public Location getOldLoc(String playerName) {
         return oldPosition.get(playerName);
     }
-    
+
+    /**
+     * 
+     * @param playerName Name of the player to set the old coords
+     * @param location The location of the player before he joins the MiningContest
+     */
     public void setOldLoc(String playerName, Location location) {
         oldPosition.put(playerName, location);
     }
 
+    /**
+     * 
+     * @return MultiWorldsAPI The MultiWorlds API
+     */
     public MultiWorldsAPI getMWAPI() {
         return MAPI;
     }
-    
+
+    /**
+     * 
+     * @param in InputStream of the content to copy
+     * @param out File to write to
+     */
     private void copy(InputStream in, File out) throws IOException {
         if (!out.exists()) {
             out.createNewFile();
-        }        
+        }
         FileOutputStream fout = new FileOutputStream(out);
         int r = in.read();
-        while (r!=-1) {
+        while (r != -1) {
             fout.write(r);
             r = in.read();
         }
         fout.close();
         in.close();
     }
-    
-    private static IPMAPI API;
 
-    @Override
-    protected void init(IPMAPI API) {
-        MiningContest.API = API;
-    }
-
+    /**
+     * 
+     * @return IPMAPI The IndiPlexManager API
+     */
     public static IPMAPI getAPI() {
         return API;
     }
-    
 }

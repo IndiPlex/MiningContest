@@ -17,7 +17,7 @@
  */
 package de.indiplex.miningcontest.logic;
 
-import de.indiplex.miningcontest.logic.classes.MCClass;
+import de.indiplex.miningcontest.logic.classes.MiCoClass;
 import java.util.EnumMap;
 import java.util.Map;
 import org.bukkit.Material;
@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack;
 public class ShopContents {
     
     private static final ItemStack[] standardInv;
-    private static final Map<MCClass.Type, ItemStack[]> standardInvs = new EnumMap<MCClass.Type, ItemStack[]>(MCClass.Type.class);
+    private static final Map<MiCoClass.Type, ItemStack[]> standardInvs = new EnumMap<MiCoClass.Type, ItemStack[]>(MiCoClass.Type.class);
     private static final Map<Material, Integer> prices = new EnumMap<Material, Integer>(Material.class);
     
     static {
@@ -50,7 +50,7 @@ public class ShopContents {
         inv[1] = new ItemStack(Material.IRON_PICKAXE, 2);
         inv[2] = new ItemStack(Material.IRON_PICKAXE, 2);
         inv[3] = new ItemStack(Material.TNT, 10);
-        standardInvs.put(MCClass.Type.MINER, inv);
+        standardInvs.put(MiCoClass.Type.MINER, inv);
         
         //CRAFTER
         inv = new ItemStack[5];
@@ -59,7 +59,7 @@ public class ShopContents {
         inv[2] = new ItemStack(Material.WOOD, 64);
         inv[3] = new ItemStack(Material.WOOD, 64);
         inv[4] = new ItemStack(Material.WORKBENCH, 2);
-        standardInvs.put(MCClass.Type.CRAFTER, inv);
+        standardInvs.put(MiCoClass.Type.CRAFTER, inv);
         
         //HUNTER
         inv = new ItemStack[18];
@@ -81,7 +81,7 @@ public class ShopContents {
         inv[15] = new ItemStack(Material.IRON_HELMET, 2);
         inv[16] = new ItemStack(Material.COOKED_CHICKEN, 20);
         inv[17] = new ItemStack(Material.COOKED_CHICKEN, 10);
-        standardInvs.put(MCClass.Type.HUNTER, inv);
+        standardInvs.put(MiCoClass.Type.HUNTER, inv);
         
         //WIZZARD
         inv = new ItemStack[8];
@@ -93,7 +93,7 @@ public class ShopContents {
         inv[5] = new ItemStack(Material.GLASS_BOTTLE, 10);
         inv[6] = new ItemStack(Material.NETHER_WARTS, 10);
         inv[7] = new ItemStack(Material.NETHER_WARTS, 10);
-        standardInvs.put(MCClass.Type.WIZZARD, inv);
+        standardInvs.put(MiCoClass.Type.WIZZARD, inv);
         
         //WARRIOR
         inv = new ItemStack[22];
@@ -119,7 +119,7 @@ public class ShopContents {
         inv[19] = new ItemStack(Material.COOKED_BEEF, 10);
         inv[20] = new ItemStack(Material.COOKED_FISH, 20);
         inv[21] = new ItemStack(Material.COOKED_FISH, 10);
-        standardInvs.put(MCClass.Type.WARRIOR, inv);
+        standardInvs.put(MiCoClass.Type.WARRIOR, inv);
         
         //PRICES
         prices.put(Material.PORK, 20);
@@ -127,7 +127,13 @@ public class ShopContents {
         prices.put(Material.STONE_SWORD, 35);
         // TODO: Add other prices
     }
-    public static void fillInventory(Inventory inv, MCClass.Type t) {
+    
+    /**
+     * Fills the specified inventory with the class items
+     * @param inv The inventory to fill
+     * @param t Class type of the player
+     */
+    public static void fillInventory(Inventory inv, MiCoClass.Type t) {
         ItemStack[] clStack = standardInvs.get(t);
         for (ItemStack is:standardInv) {
             inv.setItem(inv.firstEmpty(), is);
@@ -137,11 +143,21 @@ public class ShopContents {
         }
     }
     
-    public static void refillInventory(Inventory inv, MCClass.Type t) {
+    /**
+     * Refills the specified inventory with the class items
+     * @param inv The inventory to fill
+     * @param t Class type of the player
+     */
+    public static void refillInventory(Inventory inv, MiCoClass.Type t) {
         inv.clear();
         fillInventory(inv, t);
     }
     
+    /**
+     * Gets the price of the specified material
+     * @param mat The material to get the price of
+     * @return int The price
+     */
     public static int getPrice(Material mat) {
         Integer i = prices.get(mat);
         if (i==null) {

@@ -45,16 +45,21 @@ public class MapParser {
         wools.put(0xFF00FFFF, 0x3);        
     }
     
+    /**
+     * Parses a file for a new map
+     * @param mapFile The file to parse
+     * @return Map The fninished map
+     */
     public static Map parseMap(File mapFile) {
         try {            
             BufferedImage image = ImageIO.read(mapFile);
             int width = image.getWidth();
-            int heigth = image.getHeight();
+            int height = image.getHeight();
             
-            int[][] data = new int[width][heigth];
-            byte[][] wool = new byte[width][heigth];
+            int[][] data = new int[width][height];
+            byte[][] wool = new byte[width][height];
             for (int x=0;x<width;x++) {
-                for (int y=0;y<heigth;y++) {
+                for (int y=0;y<height;y++) {
                     int c = image.getRGB(x, y);  
                     c = optimizeColor(c);
                     wool[x][y] = closestWoolColor(c);

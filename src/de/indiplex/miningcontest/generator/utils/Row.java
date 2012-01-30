@@ -15,18 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.indiplex.miningcontest.logic.classes;
-
-import org.bukkit.entity.Player;
+package de.indiplex.miningcontest.generator.utils;
 
 /**
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Wizzard extends MiCoClass {
+public class Row {
+    public int val;
+    public int dir;
+    public int[] data = new int[16];
+    public byte[] sdata = new byte[16];
 
-    public Wizzard(Player player) {
-        super(player, Type.WIZZARD);
+    public Row(int val, int dir, int id, byte sd) {
+        this.val = val;
+        this.dir = dir;
+        for (int i = 0; i < 16; i++) {
+            data[i] = id;
+            sdata[i] = sd;
+        }
+    }
+
+    public Row() {
     }
     
 }

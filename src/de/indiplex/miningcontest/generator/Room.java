@@ -17,6 +17,7 @@
  */
 package de.indiplex.miningcontest.generator;
 
+import de.indiplex.miningcontest.generator.utils.Layer;
 import de.indiplex.miningcontest.map.MapChunk;
 import java.util.ArrayList;
 
@@ -28,57 +29,44 @@ public class Room {
 
     private int[][][] data = new int[11][16][16];
     private byte[][][] sdata = new byte[11][16][16];
-    private int heigth;
+    private int height;
     private int start;
     private MapChunk.Type type;
 
-    public Room(ArrayList<Layer> layers, MapChunk.Type type, int heigth, int start) {
-        this.heigth = heigth;
+    /**
+     * Initializes a new Room
+     * @param layers The layers of the room
+     * @param type The type of the room
+     * @param height The height of the room
+     * @param start 
+     */
+    public Room(ArrayList<Layer> layers, MapChunk.Type type, int height, int start) {
+        this.height = height;
         this.start = start;
-        data = new int[heigth][16][16];
-        sdata = new byte[heigth][16][16];
+        data = new int[height][16][16];
+        sdata = new byte[height][16][16];
         for (int i = 0; i < 11; i++) {
             Layer l = layers.get(i);
             int[][] temp = new int[16][16];
             byte[][] stemp = new byte[16][16];
-            for (int j=0;j<16;j++) {
+            for (int j = 0; j < 16; j++) {
                 temp[j] = l.data[j].clone();
                 stemp[j] = l.sdata[j].clone();
             }
-            sdata[l.val] = stemp;
-            data[l.val] = temp;
+            sdata[l.getValue()] = stemp;
+            data[l.getValue()] = temp;
         }
-        /*try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("trololol"));
-            for (int y = 0; y < 11; y++) {
-                bw.write("y:" + y + "\n");
-                for (int x = 0; x < 16; x++) {
-                    bw.write("x:" + x + "\n");
-                    for (int z = 0; z < 16; z++) {
-                        bw.write("z:" + z);
-                        bw.write(" "+data[y][x][z]+"\n");
-                    }
-                    bw.write("\n");
-                }
-                bw.write("\n");
-                bw.write("\n");
-            }
-            bw.flush();
-            bw.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }*/
         this.type = type;
     }
 
-    public int getHeigth() {
-        return heigth;
+    public int getHeight() {
+        return height;
     }
 
     public int getStart() {
         return start;
     }
-    
+
     public int[][][] getData() {
         return data;
     }
@@ -86,151 +74,8 @@ public class Room {
     public int getData(int x, int y, int z) {
         return data[y][x][z];
     }
-    
+
     public byte getSpecialData(int x, int y, int z) {
         return sdata[y][x][z];
-    }
-
-    public static class Layer implements Cloneable {
-
-        int val;
-        public int[][] data = new int[16][16];
-        public byte[][] sdata = new byte[16][16];
-
-        public Layer(Area a, int val) {
-            int[][] temp = new int[16][16];
-            byte[][] stemp = new byte[16][16];
-            for (int j=0;j<16;j++) {
-                temp[j] = a.data[j].clone();
-                stemp[j] = sdata[j].clone();
-            }
-            data = temp;
-            this.sdata = stemp;
-            this.val = val;
-        }
-        
-        private Layer(int[][] data, int val) {
-            int[][] temp = new int[16][16];
-            byte[][] stemp = new byte[16][16];
-            for (int j=0;j<16;j++) {
-                temp[j] = data[j].clone();
-                stemp[j] = sdata[j].clone();
-            }
-            this.data = temp;
-            this.sdata = stemp;
-            this.val = val;
-        }
-
-        @Override
-        protected Layer clone() throws CloneNotSupportedException {
-            return new Layer(data, val);
-        }
-        
-        public void include(Area a) {
-            for (int x=0;x<16;x++) {
-                for (int y=0;y<16;y++) {
-                    if (a.data[x][y]!=-1) {
-                        data[x][y] = a.data[x][y];
-                    }
-                    if (a.sdata[x][y]!=-2) {
-                        sdata[x][y] = a.sdata[x][y];
-                    }
-                }
-            }
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return (obj instanceof Layer) && obj.hashCode() == hashCode();
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 7;
-            hash = 79 * hash + this.val;
-            return hash;
-        }
-        
-    }
-
-    public static class Area {
-
-        public Area(int id, byte sd) {
-            data = new int[16][16];
-            for (int x = 0; x < 16; x++) {
-                for (int y = 0; y < 16; y++) {
-                    data[x][y] = id;
-                    sdata[x][y] = sd;
-                }
-            }
-        }        
-
-        public void addRows(ArrayList<Row> rows) {
-            for (Row r : rows) {
-                if (r.dir == 1) {
-                    for (int x = 0; x < 16; x++) {
-                        data[x][r.val] = r.data[x];
-                        sdata[x][r.val] = r.sdata[x];
-                    }
-                } else {
-                    for (int y = 0; y < 16; y++) {
-                        data[r.val][y] = r.data[y];
-                        sdata[r.val][y] = r.sdata[y];
-                    }
-                }
-            }
-        }        
-
-        public void addPoints(ArrayList<Point> points) {
-            for (Point p : points) {
-                data[p.x][p.y] = p.data;
-                sdata[p.x][p.y] = p.sdata;
-            }
-        }
-                
-        public int[][] data = new int[16][16];
-        public byte[][] sdata = new byte[16][16];
-    }
-
-    public static class Row {
-
-        public int val;
-        public int dir;
-        public int[] data = new int[16];
-        public byte[] sdata = new byte[16];
-
-        public Row(int val, int dir, int id, byte sd) {
-            this.val = val;
-            this.dir = dir;
-            for (int i = 0; i < 16; i++) {
-                data[i] = id;
-                sdata[i] = sd;
-            }
-        }
-
-        public Row() {
-        }
-
-    }
-
-    public static class Point {
-
-        public int x;
-        public int y;
-        public int data;
-        public byte sdata;
-
-        public Point(int x, int y, int id, byte sd) {
-            this.x = x;
-            this.y = y;
-            this.data = id;
-            this.sdata = sd;
-        }       
-        
-    }
-    
-    // JUST DEBUGING!!!
-    public void setdata(int data, int x, int y, int z) {
-        this.data[y][x][z] = data;
     }
 }

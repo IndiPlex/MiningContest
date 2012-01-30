@@ -118,9 +118,8 @@ public class MiCoCommands implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("start")) {
                 if (!mico.initializing && !mico.started) {
-                    plugin.getMWAPI().resetWorld(plugin.contestWorld, 10);
-                    int startTime = 10;
-                    ArrayList<Integer> intervals = new ArrayList<Integer>(Arrays.asList(0,5,8,9));
+                    int startTime = 5;
+                    ArrayList<Integer> intervals = new ArrayList<Integer>(Arrays.asList(0,1,3,4));
                     if (args.length!=1 && args.length!=2) {
                         try {
                             startTime = Integer.parseInt(args[1]);
@@ -137,8 +136,7 @@ public class MiCoCommands implements CommandExecutor {
                 }
             }
             if (args[0].equalsIgnoreCase("qs")) {
-                plugin.getMWAPI().resetWorld(plugin.contestWorld, 10);
-                mico.initializing = true;
+                mico.init(0, null);
                 mico.getNextTeam().addMember(player);
                 mico.start();
             }

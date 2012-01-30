@@ -47,7 +47,6 @@ public class StartThread implements Runnable {
 
     @Override
     public void run() {
-        mico.initializing = true;
         long sTime = System.currentTimeMillis();
         long currentTime;
         int cInterv = 0;
@@ -69,7 +68,6 @@ public class StartThread implements Runnable {
             }
         }
         
-        mico.initializing = false;
         mico.start();
     }
 }

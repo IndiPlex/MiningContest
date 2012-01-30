@@ -23,25 +23,44 @@ import org.bukkit.entity.Player;
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public abstract class MCClass {
+public abstract class MiCoClass {
     
     private Player player;
     private Type type;
 
-    public MCClass(Player player, Type type) {
+    /**
+     * Initializes a new MiCoCass for a player
+     * @param player The player
+     * @param type The type of the class
+     */
+    public MiCoClass(Player player, Type type) {
         this.player = player;
         this.type = type;
     }
 
+    /**
+     * Get the player of this MiCoClass instance
+     * @return Player the player
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Get the class type
+     * @return Type The type of the class
+     */
     public Type getType() {
         return type;
     }
     
-    public static MCClass createByType(Player p, Type t) {
+    /**
+     * Creates the new instance of the MiCoClass by the class type
+     * @param p The player
+     * @param t The type of the class
+     * @return MiCoClass The instance of the MiCoClass
+     */
+    public static MiCoClass createByType(Player p, Type t) {
         switch(t) {
             case HUNTER:
                 return new Hunter(p);
@@ -56,6 +75,9 @@ public abstract class MCClass {
         }
     }
     
+    /**
+     * The types
+     */
     public enum Type {
         HUNTER,
         WIZZARD,

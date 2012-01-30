@@ -35,6 +35,11 @@ public class MapChunk {
     protected Point pos;
     protected int[][] data;
 
+    /**
+     * Initializes a new MapChunk
+     * @param pos
+     * @param data 
+     */
     public MapChunk(Point pos, int[][] data) {
         this.pos = pos;
         this.data = data;
@@ -71,6 +76,13 @@ public class MapChunk {
         
     }
 
+    /**
+     * Checks whether a location is in the room
+     * @param x The x-position
+     * @param y The y-position
+     * @param z The z-position
+     * @return boolean true if location is inside the room, false if not
+     */
     public boolean isInside(int x, int y, int z) {        
         int ax = x - pos.x * 16;
         int az = z - pos.y * 16;
@@ -82,33 +94,64 @@ public class MapChunk {
             }
         }
         
-        return (ax >= 0 && ax <= 15) && (az >= 0 && az <= 15) && (y >= room.getStart() && y < room.getStart() + room.getHeigth());
+        return (ax >= 0 && ax <= 15) && (az >= 0 && az <= 15) && (y >= room.getStart() && y < room.getStart() + room.getHeight());
     }
     
+    /**
+     * Checks whether a location is in the room
+     * @param loc The location
+     * @return boolean true if location is inside the room, false if not
+     */
     public boolean isInside(Location loc) {
         return loc.getWorld()!=null && loc.getWorld().getName().equalsIgnoreCase("ContestWorld") && isInside(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
+    /**
+     * Get the BukkitChunk at the position of the MapChunk
+     * @return Chunk The BukkitChunk
+     */
     public Chunk getChunk() {
         return Bukkit.getWorld("ContestWorld").getChunkAt(pos.x, pos.y);
     }
 
+    /**
+     * Get the room inside of the MapChunk
+     * @return Room The room
+     */
     public Room getRoom() {
         return room;
     }
     
+    /**
+     * Get the spawn location
+     * @return Location The spawn locaton
+     */
     public Location getSpawnLoc() {
         return new Location(Bukkit.getWorld("ContestWorld"), pos.x*16+3, room.getStart()+2, pos.y*16+3);
     }
     
+    /**
+     * Get the color map data at the specified point
+     * @param x The x-position
+     * @param y The y-position
+     * @return int The color data
+     */
     public int getData(int x, int y) {
         return data[x][y];
     }
     
+    /**
+     * Get the position of the MapChunk
+     * @return Point The position
+     */
     public Point getPos() {
         return pos;
     }
 
+    /**
+     * Get the type of the MapChunk
+     * @return 
+     */
     public Type getType() {
         return type;
     }

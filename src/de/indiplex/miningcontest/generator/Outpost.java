@@ -38,6 +38,13 @@ public class Outpost extends MapChunk implements WithDoorsAndSigns {
     private Location sign;
     private HashMap<Team, Integer> conState = new HashMap<Team, Integer>();
 
+    /**
+     * Initializes a new Outpost
+     * @param pos Position of the Outpost
+     * @param data Color data of the MapParser
+     * @param room The room data
+     * @param type Type of the room (should be Outpost)
+     */
     public Outpost(Point pos, int[][] data, Room room, Type type) {
         super();
         this.pos = pos;
@@ -46,7 +53,7 @@ public class Outpost extends MapChunk implements WithDoorsAndSigns {
         this.type = type;
 
         for (int x = 0; x < 16; x++) {
-            for (int y = 0; y < room.getHeigth(); y++) {
+            for (int y = 0; y < room.getHeight(); y++) {
                 for (int z = 0; z < 16; z++) {
                     if (room.getData(x, y, z) == Material.IRON_DOOR_BLOCK.getId()) {
                         Location loc = new Location(null, pos.x * 16 + x, room.getStart() + y, pos.y * 16 + z);
@@ -60,6 +67,10 @@ public class Outpost extends MapChunk implements WithDoorsAndSigns {
         }
     }
 
+    /**
+     * Sets the team which the Outpost belongs to
+     * @param team 
+     */
     public void setTeam(Team team) {
         this.team = team;
     }
@@ -83,6 +94,10 @@ public class Outpost extends MapChunk implements WithDoorsAndSigns {
         return doors;
     }
 
+    /**
+     * Increases the conquering status of the Outpost
+     * @param t Team which is currently conquering
+     */
     public void increaseConState(Team t) {
         if (conState.get(t)==null) {
             conState.put(t, 0);
@@ -105,19 +120,28 @@ public class Outpost extends MapChunk implements WithDoorsAndSigns {
             t.sendMessage("You conquered a base!");
         }
     }
-
-    public boolean isInside(Location loc) {
-        return super.isInside(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-    }
     
+    /**
+     * 
+     * @return int The size of the conState HashMap
+     */
     public int getConStateSize() {
         return conState.size();
     }
     
+    /**
+     * 
+     * @return Set<Team> The keys of the conState HashMap
+     */
     public Set<Team> getConStateKeys() {
         return conState.keySet();
     }
     
+    /**
+     * 
+     * @param t The team of which you want to know the state
+     * @return int The current conquering status
+     */
     public int getConState(Team t) {        
         return conState.get(t);
     }

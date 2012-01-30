@@ -17,7 +17,7 @@
  */
 package de.indiplex.miningcontest.logic;
 
-import de.indiplex.miningcontest.map.MapChunk;
+import de.indiplex.miningcontest.map.MapChunk.Type;
 import java.util.ArrayList;
 import org.bukkit.Location;
 
@@ -26,8 +26,28 @@ import org.bukkit.Location;
  * @author IndiPlex <Cartan12@indiplex.de>
  */
 public interface WithDoorsAndSigns {
+    
+    /**
+     * Get the location of the sign in the room
+     * @return Location The location of the sign
+     */
     public Location getSign();
+   
+    /**
+     * Get the doors of the room
+     * @return ArrayList<Location> Returns the locations of the doors
+     */
     public ArrayList<Location> getDoors();
+    
+    /**
+     * Get the team who's owner of the room
+     * @return Team Returns the team who's owner
+     */
     public Team getTeam();
-    public MapChunk.Type getType();
+    
+    /**
+     * Get the type of the room
+     * @return MapChunk.Type The type of the room
+     */
+    public Type getType();
 }

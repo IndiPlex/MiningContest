@@ -17,18 +17,17 @@
  */
 package de.indiplex.miningcontest.generator;
 
+import de.indiplex.miningcontest.generator.utils.Row;
+import de.indiplex.miningcontest.generator.utils.Point;
+import de.indiplex.miningcontest.generator.utils.Layer;
+import de.indiplex.miningcontest.generator.utils.Area;
 import de.indiplex.miningcontest.map.MapChunk.Type;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import org.bukkit.Material;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  *
@@ -36,19 +35,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class RoomContentHandler implements ContentHandler {
 
-    public static void main(String[] args) throws SAXException, IOException {
-        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        xmlReader.setContentHandler(new RoomContentHandler());
-        xmlReader.parse(new InputSource(new FileInputStream("res/dungeon.xml")));
-    }
     private String buffer = null;
-    private ArrayList<Room.Layer> layers = new ArrayList<Room.Layer>();
-    private ArrayList<Room.Row> rows = new ArrayList<Room.Row>();
-    private ArrayList<Room.Point> points = new ArrayList<Room.Point>();
+    private ArrayList<Layer> layers = new ArrayList<Layer>();
+    private ArrayList<Row> rows = new ArrayList<Row>();
+    private ArrayList<Point> points = new ArrayList<Point>();
     private ArrayList<Integer> vals = new ArrayList<Integer>();
     private ArrayList<Integer> avals = new ArrayList<Integer>();
-    private Room.Area cArea;
-    private Room.Row cRow;
+    private Area cArea;
+    private Row cRow;
     private Room r;
     private int from = -1;
     private int to = -1;
@@ -59,7 +53,7 @@ public class RoomContentHandler implements ContentHandler {
     private int id = 0;
     private byte sd = -1;
     private int dir = -1;
-    private int heigth = 11;
+    private int height = 11;
     private int start = 50;
 
     @Override
@@ -85,7 +79,7 @@ public class RoomContentHandler implements ContentHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         if (localName.equals("row")) {
-            cRow = new Room.Row();
+            cRow = new Row();
         }
     }
 
@@ -107,8 +101,8 @@ public class RoomContentHandler implements ContentHandler {
             } else {
                 from = Integer.parseInt(buffer) - 1;
             }
-        } else if (localName.equals("heigth")) {
-            heigth = Integer.parseInt(buffer);
+        } else if (localName.equals("height")) {
+            height = Integer.parseInt(buffer);
         } else if (localName.equals("to")) {
             if (check()) {
                 ato = Integer.parseInt(buffer);
@@ -124,13 +118,13 @@ public class RoomContentHandler implements ContentHandler {
                 vals.add(Integer.parseInt(buffer) - 1);
             }
         } else if (localName.equals("point")) {
-            points.add(new Room.Point(x, y, id, sd));
+            points.add(new Point(x, y, id, sd));
             x = -1;
             y = -1;
             id = 0;
             sd = -1;
         } else if (localName.equals("area")) {
-            cArea = new Room.Area(id, sd);
+            cArea = new Area(id, sd);
             id = 0;
             sd = -1;
         } else if (localName.equals("row")) {
@@ -142,7 +136,7 @@ public class RoomContentHandler implements ContentHandler {
                 }
             }
             for (int i : avals) {
-                rows.add(new Room.Row(i, dir, id, sd));
+                rows.add(new Row(i, dir, id, sd));
             }
             avals.clear();
             afrom = -1;
@@ -160,12 +154,12 @@ public class RoomContentHandler implements ContentHandler {
                 }
             }
             if (cArea == null) {
-                cArea = new Room.Area(0, (byte) -1);
+                cArea = new Area(0, (byte) -1);
             }
             cArea.addRows(rows);
             cArea.addPoints(points);
             for (int i : vals) {
-                Room.Layer l = new Room.Layer(cArea, i);
+                Layer l = new Layer(cArea, i);
                 if (!layers.contains(l)) {
                     try {
                         layers.add(l.clone());
@@ -173,10 +167,10 @@ public class RoomContentHandler implements ContentHandler {
                         ex.printStackTrace();
                     }
                 } else {
-                    Room.Area a = new Room.Area(-1, (byte) -2);
+                    Area a = new Area(-1, (byte) -2);
                     a.addRows(rows);
                     a.addPoints(points);
-                    Room.Layer tl = layers.get(layers.indexOf(l));
+                    Layer tl = layers.get(layers.indexOf(l));
                     tl.include(a);
                 }
             }
@@ -187,10 +181,14 @@ public class RoomContentHandler implements ContentHandler {
             to = -1;
             cArea = null;
         } else if (localName.equals("room")) {
-            r = new Room(layers, Type.DUNGEON, heigth, start);
+            r = new Room(layers, Type.DUNGEON, height, start);
         }
     }
 
+    /**
+     * 
+     * @return Room The room
+     */
     public Room getRoom() {
         return r;
     }

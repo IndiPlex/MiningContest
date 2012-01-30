@@ -35,14 +35,28 @@ public class Map {
         this.image = image;
     }
 
+    /**
+     * Get the wool[byte] at the specified point
+     * @param x The x-position
+     * @param y The y-position
+     * @return byte The wool byte
+     */
     public byte getWool(int x, int y) {
         return wool[x][y];
     }
 
+    /**
+     * Get the wool[byte] array (two-dimensional)
+     * @return byte[][]
+     */
     public byte[][] getWool() {
         return wool;
     }
 
+    /**
+     * Get the MapChunk array
+     * @return MapChunk[] The map chunks
+     */
     public MapChunk[] getMapChunks() {
         MapChunk[] mcs = new MapChunk[21*21];
         for (int i=0;i<21;i++) {
@@ -51,10 +65,20 @@ public class Map {
         return mcs;
     }
 
+    /**
+     * Get the image
+     * @return BufferedImage The image
+     */
     public BufferedImage getImage() {
         return image;
     }
 
+    /**
+     * Get the MapChunk at the specified point
+     * @param x The x-position
+     * @param y The y-position
+     * @return MapChunk The MapChunk
+     */
     public MapChunk getMapChunk(int x, int y) {
         try {
             return chunks[x][y];

@@ -31,6 +31,10 @@ public class WoolPopulator extends BlockPopulator {
 
     private byte[][] data;
 
+    /**
+     * Places the wool at the top layer of the MiningContestWorld
+     * @param data WoolColor data-array
+     */
     public WoolPopulator(byte[][] data) {
         this.data = data;
     }

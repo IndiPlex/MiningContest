@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
  *
  * @author IndiPlex <Cartan12@indiplex.de>
  */
-public class Miner extends MCClass {
+public class Miner extends MiCoClass {
 
     public Miner(Player player) {
         super(player, Type.MINER);
