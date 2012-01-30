@@ -53,6 +53,9 @@ public class ContestChunkGenerator extends MWGenerator {
     @Override
     public byte[] generate(World world, Random random, int i, int i1) {
         byte[] blocks = new byte[32768];
+        if (mico.getMap()==null) {
+            return blocks;
+        }
         if (!MiCo.isInMap(i, i1)) {
             return blocks;
         }
@@ -90,7 +93,7 @@ public class ContestChunkGenerator extends MWGenerator {
     public List<BlockPopulator> getDefaultPopulators(World world) {
         List<BlockPopulator> pops = new ArrayList<BlockPopulator>();
         pops.add(new SpecialRoomGenerator(mico));
-        pops.add(new WoolPopulator(mico.getMap().getWool()));
+        pops.add(new WoolPopulator(mico));
         return pops;
     }
 
