@@ -129,6 +129,7 @@ public class ShopContents {
         prices.put(Material.PORK, 20);
         prices.put(Material.STONE_PICKAXE, 30);
         prices.put(Material.STONE_SWORD, 35);
+        prices.put(Material.TORCH, 5);
         // TODO: Add other prices
     }
     
