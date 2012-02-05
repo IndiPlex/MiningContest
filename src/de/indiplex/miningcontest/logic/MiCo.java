@@ -66,7 +66,6 @@ public class MiCo {
     public MiCo() {
         this.elapsedTime = 0;
         shop = new Shop(this);
-        shop.init();
     }
 
     private void setMap(String mapName) {
@@ -92,6 +91,7 @@ public class MiCo {
                 outposts.add((Outpost) mc);
             }
         }
+        shop.init();
     }
 
     /**
