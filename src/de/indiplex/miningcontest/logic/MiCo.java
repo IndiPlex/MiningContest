@@ -317,6 +317,9 @@ public class MiCo {
             return true;
         }
         for (Outpost out : outposts) {
+            if (out==null || out.getTeam()==null) {
+                continue;
+            }
             if (out.getTeam().equals(t)) {
                 if (out.isInside(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())) {
                     return true;
