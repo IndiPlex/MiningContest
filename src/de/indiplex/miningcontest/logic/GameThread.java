@@ -139,11 +139,9 @@ public class GameThread implements Runnable {
                                     }
                                     String pre = "§"+ChatColor.values()[i+1].getChar();
                                     StringBuilder str = new StringBuilder(pre+"T" + te.getNumber() + ":");
-                                    System.out.println(outp.getConState(te)+" "+(outp.getConState(te)*13/100));
                                     for (int j = 0; j < Math.round(outp.getConState(te)*13/100); j++) {
                                         str = str.append("-");
                                     }
-                                    System.out.println(str.toString());
                                     s.setLine(i, str.toString());
                                     i++;
                                 }

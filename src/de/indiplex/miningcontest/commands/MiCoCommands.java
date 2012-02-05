@@ -101,6 +101,7 @@ public class MiCoCommands implements CommandExecutor {
         if (args[0].equals("shop")) {
             if (mico.started && mico.isMiCoPlayer(player)) {
                 if (mico.isInsideTeamArea(player)) {
+                    System.out.println("debug!!!");
                     mico.getShop().show(player);
                 }
             }
