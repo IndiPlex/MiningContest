@@ -20,10 +20,11 @@ package de.indiplex.miningcontest.listeners;
 import de.indiplex.miningcontest.MiningContest;
 import de.indiplex.miningcontest.logic.MiCo;
 import de.indiplex.miningcontest.logic.Team;
-import de.indiplex.moreevents.event.InventoryClickEvent;
 import de.indiplex.virtualchests.VCAPI;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -42,19 +43,19 @@ public class MiCoSpecialListener implements Listener {
     
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        Team t = mico.getTeam(e.getPlayer());
+        Team t = mico.getTeam((Player) e.getWhoClicked());
         if (t==null) {
             return;
         }
-        String id = "T" + t.getNumber() + " " + t.getClass(e.getPlayer()).getType().toString()+" shop";
-        if (e.getClicked()<54 && e.getInventory().getName().equalsIgnoreCase(id)) {
-            int res = t.buy(e.getItemStack().getType(), e.getItemStack().getAmount(), e.getPlayer());
+        String id = "T" + t.getNumber() + " " + t.getClass((Player) e.getWhoClicked()).getType().toString()+" shop";
+        if (e.getRawSlot()<54 && e.getInventory().getName().equalsIgnoreCase(id)) {
+            int res = t.buy(e.getCurrentItem().getType(), e.getCurrentItem().getAmount(), (Player) e.getWhoClicked());
             if (res==-1) {
-                e.getPlayer().sendMessage("You don't have enough points!");
+                ((Player) e.getWhoClicked()).sendMessage("You don't have enough points!");
                 e.setCancelled(true);
             } else if (res>0) {
-                ItemStack is = e.getItemStack();
-                e.getPlayer().sendRawMessage("You bougth "+is.getAmount()+" "+is.getType().toString().toLowerCase()+" and paid "+res+" points!");
+                ItemStack is = e.getCurrentItem();
+                ((Player) e.getWhoClicked()).sendRawMessage("You bougth "+is.getAmount()+" "+is.getType().toString().toLowerCase()+" and paid "+res+" points!");
             }
         }
     }
