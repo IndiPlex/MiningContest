@@ -31,7 +31,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.generator.BlockPopulator;
 
 /**
@@ -103,19 +103,19 @@ public class SpecialRoomGenerator extends BlockPopulator {
                             if (data == Material.MOB_SPAWNER.getId()) {
                                 if (b.getState() instanceof CreatureSpawner) {
                                     CreatureSpawner cs = (CreatureSpawner) b.getState();
-                                    CreatureType ct = CreatureType.PIG;
+                                    EntityType ct = EntityType.PIG;
                                     switch (sdata) {
                                         case 0:
-                                            ct = CreatureType.ZOMBIE;
+                                            ct = EntityType.ZOMBIE;
                                             break;
                                         case 1:
-                                            ct = CreatureType.SKELETON;
+                                            ct = EntityType.SKELETON;
                                             break;
                                         case 2:
-                                            ct = CreatureType.SPIDER;
+                                            ct = EntityType.SPIDER;
                                             break;
                                     }
-                                    cs.setCreatureType(ct);
+                                    cs.setSpawnedType(ct);
                                 }
                             } else {
                                 b.setData(sdata);
