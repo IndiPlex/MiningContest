@@ -17,7 +17,9 @@
  */
 package de.indiplex.miningcontest.logic.classes;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -27,6 +29,23 @@ public class Miner extends MiCoClass {
 
     public Miner(Player player) {
         super(player, Type.MINER);
+    }
+
+    @Override
+    public void fitOutPlayer(Player player) {
+        ItemStack[] result = new ItemStack[6];
+        result[0] = new ItemStack(Material.STONE_PICKAXE, 1);
+        result[1] = new ItemStack(Material.STONE_PICKAXE, 1);
+        result[2] = new ItemStack(Material.STONE_SWORD, 1);
+        result[3] = new ItemStack(Material.COOKED_BEEF, 5);
+        result[4] = new ItemStack(Material.COOKED_FISH, 5);
+        result[5] = new ItemStack(Material.TORCH, 64);
+        player.getInventory().addItem(result);
+        player.setItemInHand(new ItemStack(Material.IRON_PICKAXE, 1));
+        player.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS, 1));
+        player.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS, 1));
+        player.getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
+        player.getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET, 1));
     }
     
 }

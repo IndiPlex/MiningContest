@@ -18,6 +18,7 @@
 package de.indiplex.miningcontest.logic.classes;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -53,6 +54,8 @@ public abstract class MiCoClass {
     public Type getType() {
         return type;
     }
+    
+    public abstract void fitOutPlayer(Player player);
     
     /**
      * Creates the new instance of the MiCoClass by the class type

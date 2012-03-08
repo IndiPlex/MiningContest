@@ -24,6 +24,7 @@ import de.indiplex.miningcontest.map.ColorMap;
 import de.indiplex.miningcontest.map.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -72,9 +73,7 @@ public class Team {
     }
         
     private void sendRawData(Player player, short mapId, byte[] data) {
-        net.minecraft.server.Packet packet = new net.minecraft.server.Packet131ItemData((short) Material.MAP.getId(), mapId, data);
-        net.minecraft.server.EntityPlayer entity = ((org.bukkit.craftbukkit.entity.CraftPlayer) player).getHandle();
-        entity.netServerHandler.sendPacket(packet);
+        player.sendMap(Bukkit.createMap(Bukkit.getWorld("ContestWorld")));
         return;
     }
     

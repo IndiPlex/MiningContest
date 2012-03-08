@@ -220,6 +220,7 @@ public class MiCo {
             for (Player p : t.getMembers()) {
                 Location loc = new Location(Bukkit.getWorld("ContestWorld"), t.getBase().getPos().x * 16 + 3, 53, t.getBase().getPos().y * 16 + 3);
                 p.teleport(loc);
+                t.getClass(p).fitOutPlayer(p);
 
                 vc.storeInventory(p.getInventory(), "mico_" + p.getName());
                 p.getInventory().clear();

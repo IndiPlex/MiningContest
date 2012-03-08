@@ -17,7 +17,11 @@
  */
 package de.indiplex.miningcontest.logic.classes;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
 
 /**
  *
@@ -27,6 +31,23 @@ public class Wizzard extends MiCoClass {
 
     public Wizzard(Player player) {
         super(player, Type.WIZZARD);
+    }
+
+    @Override
+    public void fitOutPlayer(Player player) {
+        ItemStack[] result = new ItemStack[6];
+        result[0] = new Potion(PotionType.WATER).toItemStack(10);
+        result[1] = new ItemStack(Material.NETHER_WARTS, 10);
+        result[2] = new ItemStack(Material.STONE_SWORD, 1);
+        result[3] = new ItemStack(Material.COOKED_BEEF, 5);
+        result[4] = new ItemStack(Material.COOKED_FISH, 5);
+        result[5] = new ItemStack(Material.TORCH, 64);
+        player.getInventory().addItem(result);
+        player.setItemInHand(new ItemStack(Material.IRON_PICKAXE, 1));
+        player.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS, 1));
+        player.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS, 1));
+        player.getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
+        player.getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET, 1));
     }
     
 }
